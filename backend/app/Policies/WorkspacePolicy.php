@@ -50,8 +50,8 @@ class WorkspacePolicy
     public function delete(User $user, Workspace $workspace): bool
     {
         // Admin can delete workspace only if it has no projects
-        return $user->hasRole('admin') && 
-               $user->workspace_id === $workspace->id && 
+        return $user->hasRole('admin') &&
+               $user->workspace_id === $workspace->id &&
                $workspace->projects()->count() === 0;
     }
 
@@ -70,8 +70,8 @@ class WorkspacePolicy
     public function forceDelete(User $user, Workspace $workspace): bool
     {
         // Admin can force delete workspace only if it has no projects
-        return $user->hasRole('admin') && 
-               $user->workspace_id === $workspace->id && 
+        return $user->hasRole('admin') &&
+               $user->workspace_id === $workspace->id &&
                $workspace->projects()->count() === 0;
     }
 }

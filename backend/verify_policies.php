@@ -19,7 +19,7 @@ $workspace1 = Workspace::create([
 ]);
 
 $workspace2 = Workspace::create([
-    'name' => 'Test Workspace 2', 
+    'name' => 'Test Workspace 2',
     'slug' => 'test-workspace-2',
     'description' => 'Another test workspace'
 ]);
@@ -33,7 +33,7 @@ $admin1 = User::create([
 
 $admin2 = User::create([
     'name' => 'Admin Two',
-    'email' => 'admin2@test.com', 
+    'email' => 'admin2@test.com',
     'password' => bcrypt('password'),
     'workspace_id' => $workspace2->id
 ]);

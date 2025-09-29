@@ -26,7 +26,7 @@ class ProjectPolicy
         if ($user->hasRole('admin')) {
             return $user->workspace_id === $project->workspace_id;
         }
-        
+
         return $project->members()->where('user_id', $user->id)->exists();
     }
 
@@ -48,7 +48,7 @@ class ProjectPolicy
         if ($user->hasRole('admin')) {
             return $user->workspace_id === $project->workspace_id;
         }
-        
+
         // Team members can update projects they're assigned to
         $membership = $project->members()->where('user_id', $user->id)->first();
         return $membership && in_array($membership->role, ['team', 'consultant']);

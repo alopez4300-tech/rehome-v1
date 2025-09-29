@@ -17,12 +17,12 @@ class EnsureAdminHasWorkspace
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        
+
         // If user is not authenticated, let other middleware handle it
         if (!$user) {
             return $next($request);
         }
-        
+
         // If user has admin role but no workspace assigned
         if ($user->hasRole('admin') && !$user->workspace_id) {
             // For API requests, return JSON error
@@ -32,11 +32,11 @@ class EnsureAdminHasWorkspace
                     'code' => 'ADMIN_NO_WORKSPACE'
                 ], 403);
             }
-            
+
             // For web requests, redirect or show error page
             abort(403, 'Admin user must be assigned to a workspace.');
         }
-        
+
         return $next($request);
     }
 }

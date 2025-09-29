@@ -25,7 +25,7 @@ class UserPolicy
         if ($user->hasRole('admin')) {
             return $user->workspace_id === $model->workspace_id;
         }
-        
+
         return $user->id === $model->id;
     }
 
@@ -47,7 +47,7 @@ class UserPolicy
         if ($user->hasRole('admin')) {
             return $user->workspace_id === $model->workspace_id;
         }
-        
+
         return $user->id === $model->id;
     }
 
@@ -57,8 +57,8 @@ class UserPolicy
     public function delete(User $user, User $model): bool
     {
         // Admin can delete users in their workspace, but not themselves
-        return $user->hasRole('admin') && 
-               $user->workspace_id === $model->workspace_id && 
+        return $user->hasRole('admin') &&
+               $user->workspace_id === $model->workspace_id &&
                $user->id !== $model->id;
     }
 
@@ -77,8 +77,8 @@ class UserPolicy
     public function forceDelete(User $user, User $model): bool
     {
         // Admin can force delete users in their workspace, but not themselves
-        return $user->hasRole('admin') && 
-               $user->workspace_id === $model->workspace_id && 
+        return $user->hasRole('admin') &&
+               $user->workspace_id === $model->workspace_id &&
                $user->id !== $model->id;
     }
 }
