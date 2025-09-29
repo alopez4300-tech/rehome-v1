@@ -269,12 +269,12 @@ setup-render: ## Interactive Render setup guide
 	@echo ""
 	@echo "📖 See docs/RENDER.md for detailed steps"
 
-setup-s3: ## S3 bucket + CloudFront configuration
-	@echo "☁️  S3 + CloudFront Setup"
+setup-s3: ## S3 bucket configuration with signed URLs
+	@echo "☁️  S3 Setup (No CloudFront)"
 	@echo "========================"
 	@echo "1. Create S3 buckets (public SPA, private uploads)"
 	@echo "2. Configure bucket policies"
-	@echo "3. Set up CloudFront distribution (optional)"
+	@echo "3. Set up signed URLs for private assets"
 	@echo "4. Update .env with S3 credentials"
 	@echo ""
 	@echo "📖 See docs/S3.md for detailed steps"

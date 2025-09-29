@@ -52,8 +52,8 @@ AWS_DEFAULT_REGION=us-east-1
 AWS_BUCKET=rehome-production-private
 AWS_URL=https://rehome-production-private.s3.us-east-1.amazonaws.com
 
-# Optional: CloudFront CDN
-AWS_CLOUDFRONT_URL=https://d1234567890.cloudfront.net
+# S3 Direct Access (No CloudFront)
+# Use signed URLs for private assets
 ```
 
 ### Email (Resend)

@@ -6,8 +6,8 @@ return [
     | AI Provider Configuration
     |--------------------------------------------------------------------------
     */
-    'provider' => env('AI_PROVIDER', 'openai'),
-    'model' => env('AI_MODEL', 'gpt-4o-mini'),
+    'provider' => env('AI_PROVIDER', 'anthropic'), // default: tone-first & cheap
+    'model' => env('AI_MODEL', 'claude-3-5-haiku-20241022'),
     'max_tokens' => (int) env('AI_MAX_TOKENS', 4096),
     'temperature' => (float) env('AI_TEMPERATURE', 0.7),
 

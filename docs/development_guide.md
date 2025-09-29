@@ -2,6 +2,8 @@
 
 > Complete implementation playbook for developers and AI assistants
 
+**See also**: [Stack Overview](/docs/stack_overview.md) for complete tech stack details with Render + S3 + Resend
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -484,7 +486,7 @@ Current validation status:
 - **Render**: Web service + background workers
 - **PostgreSQL**: Managed database
 - **Redis**: Cache and queue management
-- **S3**: File storage with CloudFront
+- **S3**: File storage with signed URLs
 - **Resend**: Email delivery
 
 ### Environment Setup

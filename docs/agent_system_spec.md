@@ -2,6 +2,8 @@
 
 > Comprehensive specification for ReHome's AI agent architecture and implementation
 
+**See also**: [Stack Overview](/docs/stack_overview.md) for complete tech stack details with Render + S3 + Resend
+
 ## Table of Contents
 
 - [Overview](#overview)
