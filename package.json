@@ -1,0 +1,29 @@
+{
+  "name": "rehome-v1",
+  "version": "1.0.0",
+  "description": "A modern web application for rehoming pets",
+  "main": "index.js",
+  "scripts": {
+    "dev": "echo 'Development server not configured yet'",
+    "build": "echo 'Build process not configured yet'",
+    "start": "echo 'Start command not configured yet'",
+    "test": "echo 'Tests not configured yet'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alopez4300-tech/rehome-v1.git"
+  },
+  "keywords": [
+    "pets",
+    "rehoming",
+    "web-app",
+    "react",
+    "nextjs"
+  ],
+  "author": "Armando Lopez <armando@rehome.build>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alopez4300-tech/rehome-v1/issues"
+  },
+  "homepage": "https://github.com/alopez4300-tech/rehome-v1#readme"
+}
