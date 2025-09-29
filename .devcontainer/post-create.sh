@@ -44,8 +44,8 @@ echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 
 # Set proper permissions
-sudo chown -R vscode:vscode /workspace
-cd /workspace
+sudo chown -R vscode:vscode /workspaces/rehome-v1
+cd /workspaces/rehome-v1
 
 # Create complete Laravel backend
 echo "📦 Creating Laravel 11 backend..."
@@ -68,7 +68,7 @@ if [ ! -d "backend" ]; then
     php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider" --no-interaction
     
     # Create complete backend structure
-    bash /workspace/.devcontainer/create-backend-structure.sh
+    bash /workspaces/rehome-v1/.devcontainer/create-backend-structure.sh
     
     cd ..
 else
@@ -97,7 +97,7 @@ if [ ! -d "frontend" ]; then
     npx tailwindcss init -p
     
     # Create complete frontend structure
-    bash /workspace/.devcontainer/create-frontend-structure.sh
+    bash /workspaces/rehome-v1/.devcontainer/create-frontend-structure.sh
     
     cd ..
 else

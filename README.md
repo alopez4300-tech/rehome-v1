@@ -1,248 +1,435 @@
-# Rehome v1 - Full-Stack Monorepo
+# ReHome v1# ReHome v1 - AI Agent Management Platform
 
-A modern full-stack web application for rehoming pets, built with Laravel 11, Filament v3 admin panel, React 18, and comprehensive development tooling.
+> Modern Real Estate Project Management Platform> **AI Assistant Quick Start**: This repo is **editor-agnostic** and ready for AI assistants (Cursor, VS AI, Windsurf). Run `make health-check` to validate your environment.
 
-## 🏗️ Architecture
+A comprehensive platform designed to streamline workflows between admins, team members, consultants, and clients. Built with Laravel 11, modern frontend SPA, and intelligent AI chat assistants.[![Development Status](https://img.shields.io/badge/status-active%20development-green)](https://github.com/alopez4300-tech/rehome-v1)
 
-- **Backend**: Laravel 11 (PHP 8.3) with Filament v3 admin panel
-- **Frontend**: React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui
-- **Database**: MySQL 8.0
-- **Authentication**: Laravel Sanctum + Spatie Permission
-- **Testing**: PHPUnit, PHPStan, Vitest, Playwright, Storybook
-- **CI/CD**: GitHub Actions with fast-gate and full-gate checks
-- **Development**: Docker + devcontainer for local/Codespaces
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-red)](https://laravel.com)
 
-## 🚀 Quick Start (GitHub Codespaces)
+## Quick Start[![Filament](https://img.shields.io/badge/Filament-v3-orange)](https://filamentphp.com)
 
-**The easiest way to get started - everything is automated!**
+[![React](https://img.shields.io/badge/React-18.x-blue)](https://reactjs.org)
 
-1. Click the green "Code" button on GitHub
-2. Select "Codespaces" → "Create codespace on main"
-3. Wait for the automated setup to complete (~5-8 minutes)
-4. Everything will be ready to go!
+````bash
 
-The devcontainer will automatically:
-- Install PHP 8.3, Node 20, Composer, MySQL client
-- Set up Laravel backend with Filament admin panel
-- Set up React frontend with Storybook
-- Configure database and run migrations/seeders
-- Install all dependencies
-- Configure proper permissions
+# Clone and setup## What is ReHome?
 
-## 🛠️ Manual Setup (Local Development)
+git clone <repository-url> rehome-v1
 
-If you prefer to run locally with Docker:
+cd rehome-v1ReHome is an AI-powered project management platform that connects teams, consultants, and clients through intelligent agent assistants. Built with Laravel 11 and Filament v3, it provides real-time collaboration with AI agents that can summarize activities, answer questions, and provide insights scoped to user permissions.
 
-```bash
-# Clone the repository
+make setup
+
+### Key Features
+
+# Start development
+
+make up && make dev- **🤖 AI Agent System** - Context-aware assistants with role-based access
+
+- **👥 Multi-Role Access** - Admins, team members, consultants, and clients
+
+# Verify installation- **📊 Real-time Updates** - WebSocket-powered live collaboration
+
+make health-check- **🔒 Enterprise Security** - PII redaction, budget controls, rate limiting
+
+```- **📱 Multi-Platform** - Web admin panel + SPA for mobile/desktop
+
+
+
+**Access Points:**## 🚀 Quick Start (5 minutes)
+
+- **Frontend**: http://localhost:5173
+
+- **Admin Panel**: http://localhost/admin  ### Prerequisites
+
+- **API Documentation**: http://localhost/docs/api- Docker & Docker Compose
+
+- **Queue Dashboard**: http://localhost/horizon- Git
+
+
+
+## ✨ Key Features### Setup
+
+
+
+### 🏢 **Multi-Tenant Workspaces**```bash
+
+Complete workspace isolation with role-based access control for admins, team members, consultants, and clients.# 1. Clone and enter directory
+
 git clone https://github.com/alopez4300-tech/rehome-v1.git
-cd rehome-v1
 
-# Start all services
-make up
+### 📋 **Project & Task Management** cd rehome-v1
 
-# Or setup everything from scratch
-make fresh
-```
+Full lifecycle project management with task tracking, file attachments, progress monitoring, and milestone management.
 
-## 📁 Project Structure
+# 2. Health check (validates environment)
 
-```
-/
-├─ .devcontainer/           # Codespace configuration
-│  ├─ devcontainer.json     # Development container setup
-│  └─ post-create.sh        # Automated setup script
-├─ .github/workflows/       # CI/CD pipelines
-│  └─ ci.yml               # Fast-gate & full-gate checks
-├─ docker/                  # Docker configuration
-│  ├─ nginx.conf           # Nginx web server config
-│  ├─ php.ini              # PHP configuration
-│  └─ Dockerfile.php       # PHP-FPM container
-├─ backend/                 # Laravel 11 application
-│  ├─ app/Models/          # Eloquent models (User, Workspace, Project)
-│  ├─ app/Filament/        # Admin panel resources & pages
-│  ├─ app/Policies/        # Authorization policies
-│  ├─ database/migrations/ # Database schema
-│  └─ database/seeders/    # Sample data
-├─ frontend/                # React 18 application
-│  ├─ src/components/      # React components + shadcn/ui
-│  ├─ src/lib/            # Utilities & API client
-│  ├─ .storybook/         # Storybook configuration
-│  └─ playwright/         # E2E tests
-├─ docker-compose.yml       # Multi-service orchestration
-├─ Makefile                # Development shortcuts
-└─ README.md               # This file
-```
+### 🤖 **AI Chat Assistants**make health-check
 
-## 🔧 Available Commands
+Context-aware agents with real-time streaming, cost controls, privacy protection, and role-based data access.
 
-### Development Commands
+# 3. Complete setup if needed
+
+### 📊 **Analytics & Reporting**make ai-setup
+
+Project dashboards, team performance analytics, budget tracking, and automated report generation.
+
+# 4. Verify everything works
+
+### 🔐 **Enterprise Security**make validate-db validate-agents
+
+Multi-factor authentication, audit logging, role-based permissions, and API security controls.```
+
+
+
+## 🏗️ Architecture### Access Your Application
+
+
+
+```mermaid- **Frontend (React SPA)**: http://localhost:3000
+
+graph TB- **Admin Panel (Filament)**: http://localhost:8000/admin
+
+    subgraph "Client Layer"- **API Endpoints**: http://localhost:8000/api
+
+        SPA[Frontend SPA]- **Queue Dashboard (Horizon)**: http://localhost:8000/horizon
+
+        ADMIN[Admin Panel]
+
+    end### Essential Commands
+
+
+
+    subgraph "API Layer"```bash
+
+        REST[REST API]# Development workflow
+
+        WS[WebSockets]make up            # Start all containers
+
+    endmake down          # Stop containers
+
+    make logs          # View logs
+
+    subgraph "Application"make shell         # Enter app container
+
+        AUTH[Authentication]
+
+        AGENTS[AI Agents]# Database operations
+
+        PROJECTS[Projects]make migrate       # Run migrations
+
+        TASKS[Tasks]make seed          # Seed test data
+
+    endmake fresh         # Fresh DB with seed data
+
+
+
+    subgraph "Data"# Code quality
+
+        DB[(PostgreSQL)]make lint          # Fix code formatting
+
+        REDIS[(Redis)]make test          # Run test suite
+
+    endmake qa            # Run all quality checks
+
+
+
+    subgraph "External"# AI agent system
+
+        AI[AI Providers]make validate-agents    # Validate agent system
+
+    endmake queue-work         # Start background workers
+
+    make horizon           # Start queue dashboard
+
+    SPA --> REST```
+
+    ADMIN --> REST
+
+    SPA --> WS## 🏗️ Architecture Overview
+
+
+
+    REST --> AUTH```
+
+    AUTH --> AGENTS┌─ Frontend (React + Vite) ──── Port 3000
+
+    AUTH --> PROJECTS├─ Backend (Laravel 11 + Filament) ──── Port 8000
+
+    AUTH --> TASKS├─ Database (PostgreSQL) ──── Port 5432
+
+    ├─ Cache/Queue (Redis) ──── Port 6379
+
+    AGENTS --> DB├─ WebSockets (Laravel Reverb) ──── Port 8080
+
+    PROJECTS --> DB└─ Queue Workers (Laravel Horizon) ──── Background
+
+    TASKS --> DB```
+
+
+
+    AGENTS --> REDIS### Tech Stack
+
+    AGENTS --> AI
+
+```**Backend:** PHP 8.3, Laravel 11, Filament v3, PostgreSQL, Redis
+
+**Frontend:** React 18, TypeScript, Vite, TailwindCSS
+
+## 🚀 Tech Stack**AI System:** OpenAI/Anthropic integration, token streaming, cost tracking
+
+**Infrastructure:** Docker, Laravel Horizon, Laravel Reverb, S3, Resend
+
+**Backend**: Laravel 11 + Filament v3
+
+**Frontend**: Modern SPA (React/Vue) + TypeScript  ## 📚 For Developers
+
+**Database**: PostgreSQL + Redis
+
+**WebSockets**: Laravel Reverb  ### Documentation
+
+**AI**: OpenAI/Anthropic with streaming
+
+**Infrastructure**: Docker + Nginx  - **[Development Guide](/docs/development_guide.md)** - Complete setup and implementation guide
+
+- **[Agent System Specification](/docs/agent_system_spec.md)** - AI agent architecture and usage
+
+## 👥 User Roles- **[Architecture Overview](/docs/architecture.md)** - System design and components
+
+- **[Setup Guide](/docs/SETUP.md)** - 5-minute development setup
+
+| Role | Access | AI Permissions | Use Case |- **[Operations Manual](/docs/OPS.md)** - Troubleshooting and maintenance
+
+|------|--------|----------------|----------|- **[Environment Guide](/docs/ENV.md)** - Configuration reference
+
+| **Admin** | Workspace-wide | Full context, financial data | Workspace owners |
+
+| **Team** | Assigned projects | Project context, team comms | Project managers |### AI Assistant Resources
+
+| **Consultant** | Contracted work | Task-specific, filtered data | External contractors |
+
+| **Client** | Their projects | High-level summaries, safe content | Property owners |- **[AI Prompts](/ai/prompts/)** - Ready-made context and instructions
+
+- **[Health Check Scripts](/scripts/dev/)** - Validation and setup scripts
+
+## 🛠️ Development
+
+### Development Workflow
+
+### Common Commands
+
+This repository is **editor-agnostic** and optimized for AI assistant collaboration:
+
 ```bash
-make up          # Start all services with Docker
-make down        # Stop all services
-make logs        # Show logs for all services
-make be          # Start Laravel backend server
-make fe          # Start React frontend dev server
-make storybook   # Start Storybook component library
+
+# Environment Management```bash
+
+make up             # Start containers# Instant environment validation
+
+make down           # Stop containers  make health-check
+
+make dev            # Development mode
+
+make shell          # Access app shell# AI assistant onboarding
+
+make ai-setup
+
+# Database Operationsmake plan-agent-system
+
+make migrate        # Run migrations
+
+make seed           # Seed test data# Development commands
+
+make fresh          # Fresh DB with seedmake help    # See all available commands
+
+````
+
+# Testing & Quality
+
+make test # Full test suite## 🤝 Contributing
+
+make lint # Code style check
+
+make health-check # System validation1. Fork the repository
+
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+
+# AI System3. Run quality checks (`make qa`)
+
+make validate-agents # Test AI components4. Commit changes (`git commit -m 'feat: add amazing feature'`)
+
+make test-agent-config # Validate AI config5. Push to branch (`git push origin feature/amazing-feature`)
+
+````6. Open a Pull Request
+
+
+
+### Prerequisites## 📄 License
+
+
+
+- Docker & Docker Compose 20.10+This project is proprietary software. All rights reserved.
+
+- Make (command runner)
+
+- Git## 🆘 Support
+
+
+
+### Setup Process- **Issues**: [GitHub Issues](https://github.com/alopez4300-tech/rehome-v1/issues)
+
+- **Discussions**: [GitHub Discussions](https://github.com/alopez4300-tech/rehome-v1/discussions)
+
+1. **Clone & Configure**:- **Documentation**: `/docs` directory
+
+   ```bash- **Health Check**: `make health-check`
+
+   git clone <repo> rehome-v1
+
+   cd rehome-v1---
+
+   cp .env.example .env
+
+   # Edit .env with your API keys**Ready to contribute?** Start with `make health-check` and see the [Development Guide](/docs/development_guide.md) for detailed instructions.
+````
+
+2. **Install & Start**:
+
+   ```bash
+   make setup    # One-command installation
+   make dev      # Start development
+   ```
+
+3. **Verify**:
+   ```bash
+   make health-check  # Validates 40+ system components
+   ```
+
+### Default Access
+
+**Admin Login**: admin@rehome.local / password
+**Frontend**: http://localhost:5173
+**Admin Panel**: http://localhost/admin
+
+## 📡 API Overview
+
+### Authentication
+
+```http
+Authorization: Bearer your-sanctum-token
 ```
 
-### Quality Assurance Commands
+### Core Endpoints
+
+```
+GET    /api/projects                    # List user projects
+POST   /api/projects/{id}/tasks         # Create task
+GET    /api/projects/{id}/agent/threads # AI conversations
+POST   /api/projects/{id}/files         # Upload files
+```
+
+### WebSocket Events
+
+```javascript
+// Real-time updates
+Echo.private('project.123')
+    .listen('TaskUpdated', (e) => { ... })
+    .listen('AgentMessageCreated', (e) => { ... });
+```
+
+## ⚙️ Configuration
+
+### Environment Setup
+
 ```bash
-make ci          # Run all quality checks locally
-make setup       # Initial project setup
-make clean       # Clean all caches
-make fresh       # Fresh installation
+# Core
+APP_URL=http://localhost
+DB_CONNECTION=pgsql
+
+# AI Configuration
+AI_PROVIDER=openai
+OPENAI_API_KEY=your-key
+AI_MODEL=gpt-4o-mini
+
+# WebSocket/Queue
+BROADCAST_DRIVER=reverb
+QUEUE_CONNECTION=redis
 ```
 
-### Backend-Specific Commands
+### AI System Config
+
+Edit `config/ai.php` for:
+
+- Token budgets & cost limits
+- PII redaction patterns
+- Rate limiting policies
+- Provider fallback rules
+
+## 🚀 Deployment
+
+### Staging
+
 ```bash
-cd backend
-composer run-script lint      # Laravel Pint code formatting
-composer run-script typecheck # PHPStan static analysis
-composer run-script test      # PHPUnit test suite
-composer run-script audit     # Security audit
-
-php artisan migrate           # Run database migrations
-php artisan db:seed          # Seed sample data
-php artisan tinker           # Laravel REPL
+make deploy-staging
+make health-check
 ```
 
-### Frontend-Specific Commands
+### Production
+
 ```bash
-cd frontend
-npm run dev           # Development server
-npm run build         # Production build
-npm run preview       # Preview production build
-npm run lint          # ESLint
-npm run typecheck     # TypeScript checking
-npm run test          # Vitest unit tests
-npm run test:e2e      # Playwright E2E tests
-npm run storybook     # Storybook dev server
-npm run build:storybook # Build Storybook static
-npm run lhci          # Lighthouse CI
+# Configure production environment
+cp .env.production .env
+
+# Deploy with zero downtime
+make deploy-prod
+make monitor
 ```
 
-## 🌐 Service URLs
+### Infrastructure Requirements
 
-After starting the development environment:
+- **CPU**: 2+ cores
+- **RAM**: 4GB+
+- **Storage**: 50GB+ SSD
+- **PHP**: 8.3+ with extensions
+- **Database**: PostgreSQL 15+
+- **Cache/Queue**: Redis 6+
 
-| Service | URL | Description |
-|---------|-----|-------------|
-| Frontend | http://localhost:3000 | React dev server |
-| Backend API | http://localhost:80 | Laravel application |
-| Admin Panel | http://localhost:80/admin | Filament admin interface |
-| Storybook | http://localhost:6006 | Component library |
-| MailHog | http://localhost:8025 | Email testing |
-| Database | localhost:3306 | MySQL (user: app, pass: app) |
+## 📚 Documentation
 
-## 👤 Admin Access
+### Developer Resources
 
-After the automated setup completes, you can access the admin panel with these seeded accounts:
+- **[Development Guide](docs/development_guide.md)** - Complete setup and architecture guide
+- **[AI Agent System](docs/agent_system_spec.md)** - AI system specification and API
+- **[Architecture Overview](docs/architecture.md)** - System design and patterns
+- **[Deployment Guide](docs/deployment.md)** - Production deployment procedures
 
-- **Admin 1**: admin1@rehome.build / password (Workspace: "Acme Construction")
-- **Admin 2**: admin2@rehome.build / password (Workspace: "Beta Corp")
+### API Documentation
 
-Each admin only sees projects from their assigned workspace.
-
-## 🔄 CI/CD Pipeline
-
-The project includes comprehensive CI/CD with two gate levels:
-
-### Fast Gate (Every Push)
-- Backend: Lint (Pint), Typecheck (PHPStan), Unit tests (PHPUnit)
-- Frontend: Lint (ESLint), Typecheck (TypeScript), Build (Vite)
-
-### Full Gate (Pull Requests Only)
-- All fast-gate checks
-- Backend: Full test suite, Security audit
-- Frontend: Component tests (Vitest), E2E tests (Playwright)
-- Storybook build verification
-- Lighthouse CI performance checks
-
-## 🏢 Workspace-Based Architecture
-
-The application uses a multi-tenant workspace system:
-
-- **Workspaces**: Isolated environments for different organizations
-- **Users**: Assigned to workspaces with roles (admin, team, consultant, client)
-- **Projects**: Scoped to workspaces, with user assignments and roles
-- **Admin Panel**: Admins only see data from their assigned workspace
-
-## 📚 Key Features
-
-### Backend (Laravel + Filament)
-- ✅ User management with role-based permissions
-- ✅ Workspace-scoped project management
-- ✅ Soft deletes with restore functionality
-- ✅ User-project assignments with pivot roles
-- ✅ Inline workspace creation in user forms
-- ✅ Tabbed project views (Active, On Hold, Completed, Archived, Trash)
-- ✅ Comprehensive policies for access control
-
-### Frontend (React + Vite)
-- ✅ VS Code-inspired dashboard layout
-- ✅ Resizable sidebar navigation
-- ✅ Component library with Storybook
-- ✅ Tailwind CSS + shadcn/ui components
-- ✅ TypeScript for type safety
-- ✅ API client with React Query
-
-### Development Experience
-- ✅ One-click Codespace setup
-- ✅ Hot reloading for frontend and backend
-- ✅ Comprehensive test coverage
-- ✅ Automated code formatting and linting
-- ✅ Database migrations and seeding
-- ✅ Email testing with MailHog
-
-## 🐛 Troubleshooting
-
-### Codespace Issues
-If the automated setup fails, try:
-```bash
-# Re-run the setup script
-bash .devcontainer/post-create.sh
-
-# Or manually set up
-make fresh
-```
-
-### Database Issues
-```bash
-# Reset database
-cd backend
-php artisan migrate:fresh --seed
-```
-
-### Permission Issues
-```bash
-# Fix Laravel permissions
-cd backend
-chmod -R 775 storage bootstrap/cache
-```
-
-### Frontend Issues
-```bash
-# Clear npm cache and reinstall
-cd frontend
-rm -rf node_modules package-lock.json
-npm install
-```
+- **OpenAPI Spec**: Available at `/docs/api` when running
+- **WebSocket Events**: Real-time event specifications
+- **Authentication**: Sanctum token management
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes
-4. Run quality checks: `make ci`
-5. Commit your changes: `git commit -m 'Add amazing feature'`
-6. Push to the branch: `git push origin feature/amazing-feature`
-7. Open a Pull Request
+1. **Fork & Branch**: Create feature branches from `main`
+2. **Code Standards**: Follow PSR-12 (PHP) and ESLint (JS/TS)
+3. **Testing**: Write tests for new features (`make test`)
+4. **Documentation**: Update relevant docs and API specs
+5. **Submit PR**: Include tests and clear description
+
+### Code Quality
+
+```bash
+make lint        # Check code style
+make fix         # Auto-fix issues
+make test        # Run full test suite
+make coverage    # Generate coverage report
+```
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+Proprietary software. All rights reserved.
 
 ---
 
-**Ready to start? Just open this repo in GitHub Codespaces and everything will be set up automatically! 🚀**
+**ReHome v1** - Streamlined real estate project management with intelligent automation

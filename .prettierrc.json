@@ -1,0 +1,37 @@
+{
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "printWidth": 120,
+  "endOfLine": "lf",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "proseWrap": "preserve",
+  "overrides": [
+    {
+      "files": "*.blade.php",
+      "options": {
+        "parser": "html",
+        "printWidth": 120,
+        "htmlWhitespaceSensitivity": "ignore",
+        "bracketSameLine": false
+      }
+    },
+    {
+      "files": ["*.json", "*.md"],
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.php",
+      "options": {
+        "parser": "php",
+        "printWidth": 120,
+        "tabWidth": 4
+      }
+    }
+  ]
+}
