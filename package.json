@@ -1,29 +1,57 @@
 {
   "name": "rehome-v1",
   "version": "1.0.0",
-  "description": "A modern web application for rehoming pets",
-  "main": "index.js",
+  "description": "A modern full-stack web application for rehoming pets - Laravel 11 + React 18 + Filament v3",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "echo 'Development server not configured yet'",
-    "build": "echo 'Build process not configured yet'",
-    "start": "echo 'Start command not configured yet'",
-    "test": "echo 'Tests not configured yet'"
+    "dev": "concurrently \"npm run be\" \"npm run fe\"",
+    "be": "cd backend && php artisan serve --host=0.0.0.0 --port=8000",
+    "fe": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "storybook": "cd frontend && npm run storybook",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && composer run-script test",
+    "test:frontend": "cd frontend && npm run test",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && composer run-script lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "typecheck": "npm run typecheck:backend && npm run typecheck:frontend",
+    "typecheck:backend": "cd backend && composer run-script typecheck",
+    "typecheck:frontend": "cd frontend && npm run typecheck",
+    "ci": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "setup": "npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "cd backend && composer install && php artisan key:generate && php artisan migrate --force && php artisan db:seed --force",
+    "setup:frontend": "cd frontend && npm install",
+    "fresh": "npm run setup && docker-compose up -d"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alopez4300-tech/rehome-v1.git"
   },
   "keywords": [
+    "laravel",
+    "react",
+    "filament",
+    "typescript",
+    "tailwindcss",
+    "full-stack",
+    "monorepo",
     "pets",
     "rehoming",
-    "web-app",
-    "react",
-    "nextjs"
+    "project-management"
   ],
   "author": "Armando Lopez <armando@rehome.build>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/alopez4300-tech/rehome-v1/issues"
   },
-  "homepage": "https://github.com/alopez4300-tech/rehome-v1#readme"
+  "homepage": "https://github.com/alopez4300-tech/rehome-v1#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "php": ">=8.3.0"
+  }
 }
