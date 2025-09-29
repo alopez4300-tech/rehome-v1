@@ -199,7 +199,7 @@ class AgentService
      */
     private function createAssistantMessage(AgentThread $thread, string $content, AgentRun $run): AgentMessage
     {
-        return AgentMessage::create([
+        $message = AgentMessage::create([
             'thread_id' => $thread->id,
             'role' => 'assistant',
             'content' => $content,
@@ -209,6 +209,11 @@ class AgentService
                 'provider' => $run->provider,
             ],
         ]);
+
+        // Broadcast the new message for real-time updates
+        broadcast(new \App\Events\Agent\AgentMessageCreated($message));
+
+        return $message;
     }
 
     /**

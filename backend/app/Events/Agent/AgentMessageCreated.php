@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 /**
  * Agent Message Created Event - Broadcasts real-time agent responses
@@ -20,14 +21,14 @@ class AgentMessageCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public array $data;
+    public $message;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(array $data)
+    public function __construct($message)
     {
-        $this->data = $data;
+        $this->message = $message;
     }
 
     /**
@@ -35,7 +36,7 @@ class AgentMessageCreated implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        $threadId = $this->data['thread_id'];
+        $threadId = $this->message->thread_id ?? $this->message->agent_thread_id;
 
         return [
             new PrivateChannel("agent.thread.{$threadId}"),
@@ -56,18 +57,17 @@ class AgentMessageCreated implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'thread_id' => $this->data['thread_id'],
-            'run_id' => $this->data['run_id'] ?? null,
-            'stream_id' => $this->data['stream_id'] ?? null,
-            'type' => $this->data['type'], // 'stream_start', 'token', 'stream_end', 'error', 'typing', etc.
-            'content' => $this->data['content'],
-            'done' => $this->data['done'],
-            'metadata' => $this->data['metadata'] ?? [],
-            'error' => $this->data['error'] ?? null,
-            'typing' => $this->data['typing'] ?? null,
-            'progress' => $this->data['progress'] ?? null,
-            'token_count' => $this->data['token_count'] ?? null,
-            'timestamp' => now()->toISOString(),
+            'message' => [
+                'id' => $this->message->id,
+                'thread_id' => $this->message->thread_id ?? $this->message->agent_thread_id,
+                'role' => $this->message->role,
+                'content' => $this->message->content,
+                'metadata' => $this->message->metadata ?? [],
+                'cost_cents' => $this->message->cost_cents ?? 0,
+                'token_count' => $this->message->token_count ?? 0,
+                'created_at' => $this->message->created_at?->toISOString(),
+            ],
+            'timestamp' => Carbon::now()->toISOString(),
         ];
     }
 
