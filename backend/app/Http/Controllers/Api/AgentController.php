@@ -62,8 +62,12 @@ class AgentController extends Controller
             'metadata' => $validated['metadata'] ?? null,
         ]);
 
-        // TODO: Dispatch job to process the message with AI
-        // dispatch(new ProcessAgentMessage($thread, $message));
+        // Dispatch job to process the message with AI
+        dispatch(new \App\Jobs\Agent\ProcessAgentRunJob(
+            $thread,
+            $validated['content'],
+            Auth::user()
+        ));
 
         return response()->json([
             'data' => $message,

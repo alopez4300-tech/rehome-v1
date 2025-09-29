@@ -22,6 +22,7 @@ ReHome is an AI-powered project management platform that connects teams, consult
 ## 🚀 Quick Start (5 minutes)
 
 ### Prerequisites
+
 - Docker & Docker Compose
 - Git
 
@@ -78,7 +79,7 @@ make horizon           # Start queue dashboard
 
 ```
 ┌─ Frontend (React + Vite) ──── Port 3000
-├─ Backend (Laravel 11 + Filament) ──── Port 8000  
+├─ Backend (Laravel 11 + Filament) ──── Port 8000
 ├─ Database (PostgreSQL) ──── Port 5432
 ├─ Cache/Queue (Redis) ──── Port 6379
 ├─ WebSockets (Laravel Reverb) ──── Port 8080
@@ -87,10 +88,10 @@ make horizon           # Start queue dashboard
 
 ### Tech Stack
 
-**Backend:** PHP 8.3, Laravel 11, Filament v3, PostgreSQL, Redis  
-**Frontend:** React 18, TypeScript, Vite, TailwindCSS  
-**AI System:** OpenAI/Anthropic integration, token streaming, cost tracking  
-**Infrastructure:** Docker, Laravel Horizon, Laravel Reverb, S3, Resend  
+**Backend:** PHP 8.3, Laravel 11, Filament v3, PostgreSQL, Redis
+**Frontend:** React 18, TypeScript, Vite, TailwindCSS
+**AI System:** OpenAI/Anthropic integration, token streaming, cost tracking
+**Infrastructure:** Docker, Laravel Horizon, Laravel Reverb, S3, Resend
 
 ## 📚 For Developers
 

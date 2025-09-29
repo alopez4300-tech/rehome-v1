@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Services\Agent\ContextBuilder;
 use App\Services\Agent\CostTracker;
 use App\Services\Agent\StreamingService;
+use App\Services\Agent\Providers\OpenAIProvider;
+use App\Services\Agent\Providers\AnthropicProvider;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Exception;
@@ -313,43 +315,83 @@ class AgentService
     }
 
     /**
-     * Execute OpenAI API request (placeholder)
+     * Execute OpenAI API request with streaming
      */
     private function executeOpenAIRequest(AgentRun $run, array $messages): array
     {
-        // TODO: Implement actual OpenAI API call with streaming
-        // This is a placeholder for the implementation
+        $provider = new OpenAIProvider();
 
         Log::info('Executing OpenAI request', [
             'run_id' => $run->id,
+            'model' => $run->model,
             'message_count' => count($messages),
         ]);
 
-        // Simulate response for now
+        $fullContent = '';
+        $usage = [];
+
+        // Process streaming response
+        foreach ($provider->chatCompletion($run, $messages, true) as $chunk) {
+            if ($chunk['type'] === 'token') {
+                // Stream token via WebSocket
+                $this->streamingService->streamToken($run->thread, $run, 'stream_' . $run->id, $chunk['content']);
+                $fullContent .= $chunk['content'];
+            } elseif ($chunk['type'] === 'complete') {
+                $usage = $chunk['usage'];
+
+                // End stream
+                $this->streamingService->endStream($run->thread, $run, 'stream_' . $run->id, $fullContent);
+                break;
+            }
+        }
+
         return [
-            'content' => 'This is a simulated response from OpenAI. Implement actual API call here.',
-            'tokens_used' => ['input' => 100, 'output' => 50],
+            'content' => $fullContent,
+            'tokens_used' => [
+                'input' => $usage['prompt_tokens'] ?? 0,
+                'output' => $usage['completion_tokens'] ?? 0,
+            ],
             'finish_reason' => 'stop',
         ];
     }
 
     /**
-     * Execute Anthropic API request (placeholder)
+     * Execute Anthropic API request with streaming
      */
     private function executeAnthropicRequest(AgentRun $run, array $messages): array
     {
-        // TODO: Implement actual Anthropic API call with streaming
-        // This is a placeholder for the implementation
+        $provider = new AnthropicProvider();
 
         Log::info('Executing Anthropic request', [
             'run_id' => $run->id,
+            'model' => $run->model,
             'message_count' => count($messages),
         ]);
 
-        // Simulate response for now
+        $fullContent = '';
+        $usage = [];
+
+        // Process streaming response
+        foreach ($provider->chatCompletion($run, $messages, true) as $chunk) {
+            if ($chunk['type'] === 'token') {
+                // Stream token via WebSocket
+                $this->streamingService->streamToken($run->thread, $run, 'stream_' . $run->id, $chunk['content']);
+                $fullContent .= $chunk['content'];
+            } elseif ($chunk['type'] === 'complete') {
+                $usage = $chunk['usage'];
+
+                // End stream
+                $this->streamingService->endStream($run->thread, $run, 'stream_' . $run->id, $fullContent);
+                break;
+            }
+        }
+
         return [
-            'content' => 'This is a simulated response from Anthropic. Implement actual API call here.',
-            'tokens_used' => ['input' => 100, 'output' => 50],
+            'content' => $fullContent,
+            'tokens_used' => [
+                'input' => $usage['prompt_tokens'] ?? 0,
+                'output' => $usage['completion_tokens'] ?? 0,
+            ],
             'finish_reason' => 'stop',
         ];
     }

@@ -40,17 +40,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{project}/messages', [App\Http\Controllers\Api\MessageController::class, 'index']);
     Route::post('/projects/{project}/messages', [App\Http\Controllers\Api\MessageController::class, 'store']);
 
-    // Project Agent endpoints
-    Route::prefix('projects/{project}/agent')->name('projects.agent.')->group(function () {
+    // Project Agent endpoints - rate limited
+    Route::prefix('projects/{project}/agent')->name('projects.agent.')->middleware('agent.rate_limit')->group(function () {
         Route::post('/threads', [ProjectAgentController::class, 'createThread']);
         Route::get('/threads', [ProjectAgentController::class, 'getThreads']);
     });
 
-    // Agent Thread endpoints
-    Route::prefix('agent/threads/{thread}')->name('agent.threads.')->group(function () {
+    // Agent Thread endpoints - rate limited
+    Route::prefix('agent/threads/{thread}')->name('agent.threads.')->middleware('agent.rate_limit')->group(function () {
         Route::get('/', [AgentController::class, 'getThread']);
         Route::get('/messages', [AgentController::class, 'getMessages']);
-        Route::post('/messages', [AgentController::class, 'sendMessage']);
+        Route::post('/messages', [AgentController::class, 'sendMessage']); // Main rate-limited endpoint
         Route::get('/stream', [AgentController::class, 'stream'])->name('stream');
         Route::post('/cancel', [AgentController::class, 'cancel']);
     });
