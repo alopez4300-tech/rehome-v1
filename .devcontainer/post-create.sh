@@ -3,9 +3,38 @@ set -e
 
 echo "🚀 Setting up Rehome full-stack development environment..."
 
-# Update package lists and install dependencies
-sudo apt-get update
-sudo apt-get install -y mysql-client unzip curl wget
+# Debug system information
+echo "🔍 System Information:"
+echo "  OS: $(uname -a)"
+echo "  User: $(whoami)"
+echo "  Working Directory: $(pwd)"
+echo "  Available package managers:"
+command -v apt-get >/dev/null 2>&1 && echo "    - apt-get (Ubuntu/Debian)"
+command -v apk >/dev/null 2>&1 && echo "    - apk (Alpine)"
+command -v yum >/dev/null 2>&1 && echo "    - yum (RHEL/CentOS)"
+
+# Detect OS and install dependencies accordingly
+if command -v apt-get >/dev/null 2>&1; then
+    echo "📦 Detected Ubuntu/Debian - using apt-get"
+    sudo apt-get update
+    sudo apt-get install -y mysql-client unzip curl wget
+elif command -v apk >/dev/null 2>&1; then
+    echo "📦 Detected Alpine Linux - using apk"
+    sudo apk update
+    sudo apk add --no-cache mysql-client unzip curl wget bash
+else
+    echo "⚠️  Unknown package manager - attempting to continue without additional packages"
+fi
+
+# Verify required tools
+echo "🔍 Verifying required tools:"
+for tool in php composer node npm curl wget; do
+    if command -v $tool >/dev/null 2>&1; then
+        echo "  ✅ $tool: $(command -v $tool)"
+    else
+        echo "  ❌ $tool: NOT FOUND"
+    fi
+done
 
 # Install Laravel installer globally
 composer global require laravel/installer

@@ -1,6 +1,6 @@
 {
   "name": "Rehome Full-Stack Development",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
@@ -73,8 +73,14 @@
   },
 
   "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "updateContentCommand": "echo 'Container updated, run: bash .devcontainer/quick-fix.sh if needed'",
 
   "remoteUser": "vscode",
+  
+  "containerEnv": {
+    "DEBIAN_FRONTEND": "noninteractive",
+    "TZ": "UTC"
+  },
   
   "mounts": [
     "source=rehome-composer-cache,target=/home/vscode/.composer,type=volume",
