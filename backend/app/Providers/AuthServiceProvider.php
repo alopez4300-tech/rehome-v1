@@ -31,6 +31,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Additional gates can be defined here
+        // Gate for workspace admin access
+        Gate::define('manage-current-workspace', function (User $user) {
+            return $user->isSystemAdmin() || $user->isWorkspaceAdmin();
+        });
     }
 }
