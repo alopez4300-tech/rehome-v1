@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('invited_at')->nullable();
             $table->timestamp('joined_at')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['workspace_id', 'user_id']);
         });
     }

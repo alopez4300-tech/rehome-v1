@@ -23,15 +23,15 @@ return new class extends Migration
             $table->string('mime_type');
             $table->bigInteger('size');
             $table->foreignId('uploaded_by')->constrained('users');
-            
+
             // Project assets derived data columns
             $table->string('ocr_path')->nullable();
-            $table->string('thumbnail_path')->nullable(); 
+            $table->string('thumbnail_path')->nullable();
             $table->string('embedding_path')->nullable();
             $table->boolean('has_ocr')->default(false);
             $table->boolean('has_thumbnail')->default(false);
             $table->boolean('has_embedding')->default(false);
-            
+
             $table->json('metadata')->nullable();
             $table->timestamps();
         });
