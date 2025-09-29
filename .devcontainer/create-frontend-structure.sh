@@ -3,7 +3,7 @@ set -e
 
 echo "🎨 Creating React frontend structure..."
 
-cd /workspace/frontend
+cd /workspaces/rehome-v1/frontend
 
 # Update package.json scripts
 echo "Updating package.json scripts..."

@@ -1,6 +1,6 @@
 {
   "name": "Rehome Full-Stack Development",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
@@ -9,7 +9,6 @@
     "ghcr.io/devcontainers/features/php:1": {
       "version": "8.3"
     },
-    "ghcr.io/devcontainers/features/composer:2": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "dockerDashComposeVersion": "v2"
     },
@@ -34,7 +33,6 @@
       ],
       "settings": {
         "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
           "source.fixAll.eslint": "explicit"
         },

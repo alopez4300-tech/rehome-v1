@@ -3,7 +3,7 @@ set -e
 
 echo "🏗️ Creating Laravel backend structure..."
 
-cd /workspace/backend
+cd /workspaces/rehome-v1/backend
 
 # Create Models
 echo "Creating models..."

@@ -13,7 +13,14 @@ sudo apk add --no-cache \
     wget \
     bash \
     git \
-    openssh-client
+    openssh-client \
+    php83 \
+    php83-cli \
+    php83-mbstring \
+    php83-curl \
+    php83-zip \
+    php83-xml \
+    php83-pdo_mysql
 
 # Install Composer
 echo "📦 Installing Composer..."
@@ -28,8 +35,8 @@ if ! command -v node >/dev/null 2>&1; then
 fi
 
 # Set proper permissions and continue with main setup
-sudo chown -R vscode:vscode /workspace || sudo chown -R $(whoami):$(whoami) /workspace
-cd /workspace
+sudo chown -R vscode:vscode /workspaces/rehome-v1 || sudo chown -R $(whoami):$(whoami) /workspaces/rehome-v1
+cd /workspaces/rehome-v1
 
 echo "✅ Alpine Linux setup complete, continuing with main setup..."
 
