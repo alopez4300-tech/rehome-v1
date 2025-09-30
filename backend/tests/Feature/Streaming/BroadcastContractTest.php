@@ -53,7 +53,7 @@ class BroadcastContractTest extends TestCase
 
         // Validate broadcast contract
         $this->assertEquals('agent.thread.token', $event->broadcastAs(), 'Event must broadcast as agent.thread.token');
-        
+
         // Check channel name (should be private-agent.thread.{id} for private channels)
         $channel = $event->broadcastOn()[0];
         $this->assertEquals("private-agent.thread.{$thread->id}", $channel->name, 'Event must broadcast on private channel');
@@ -95,7 +95,7 @@ class BroadcastContractTest extends TestCase
         ]);
 
         $channel = $event->broadcastOn()[0];
-        
+
         // Verify it's a private channel with correct naming
         $this->assertInstanceOf(\Illuminate\Broadcasting\PrivateChannel::class, $channel);
         $this->assertEquals("private-agent.thread.{$thread->id}", $channel->name);
@@ -163,7 +163,7 @@ class BroadcastContractTest extends TestCase
 
         // Test sequence integrity directly on the service calls
         $tokens = ['Hello', ' ', 'streaming', ' ', 'world!'];
-        
+
         // Track sequences manually since Event::fake() doesn't work with broadcast()
         $sequences = [];
         foreach ($tokens as $token) {
@@ -180,7 +180,7 @@ class BroadcastContractTest extends TestCase
 
         // Verify idempotent cleanup behavior
         $this->assertTrue(cache()->has("ai:done:{$streamId}"), 'Done flag should persist for idempotency');
-        
+
         // Test idempotent endStream call
         $service->endStream($thread, $run, $streamId, implode('', $tokens));
         $this->assertTrue(cache()->has("ai:done:{$streamId}"), 'Done flag should still exist after second endStream call');

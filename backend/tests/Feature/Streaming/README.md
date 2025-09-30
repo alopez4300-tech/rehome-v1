@@ -5,6 +5,7 @@
 ### **Production-Ready Tests** ✅
 
 #### `BroadcastContractTest.php`
+
 **The authoritative test suite for the ReHome v1 streaming system.**
 
 - ✅ **4 comprehensive tests** covering all critical contracts
@@ -14,9 +15,10 @@
 - ✅ **PHPUnit 12 ready**: Uses `#[Test]` attributes instead of docblock annotations
 
 **Test Coverage:**
+
 1. `broadcast_contract_private_channel_and_seq()` - Event structure & sequencing
 2. `private_channel_uses_correct_naming_convention()` - Channel security
-3. `event_structure_contains_required_fields()` - Payload contracts  
+3. `event_structure_contains_required_fields()` - Payload contracts
 4. `streaming_service_maintains_sequence_integrity()` - Production reliability
 
 ### **Retired Legacy Tests** ❌
@@ -27,6 +29,7 @@ The following test files have been **retired** as they tested outdated patterns:
 - ~~`StreamingBroadcastTest.php`~~ - Had wrong method signatures and import paths
 
 **Why retired vs updated:**
+
 - Legacy tests used `workspaces.user_id` (doesn't exist in current schema)
 - Tested old message-based approach vs. current token streaming
 - Had fundamental architectural mismatches that would require complete rewrites
@@ -44,6 +47,7 @@ php artisan test tests/Feature/Streaming/BroadcastContractTest.php
 ### **Adding New Tests**
 
 When adding streaming-related tests:
+
 - ✅ Add to `BroadcastContractTest.php` for core contracts
 - ✅ Use `ThreadTokenStreamed` event with correct namespace
 - ✅ Test private channels with `private-agent.thread.{id}` naming
@@ -60,7 +64,7 @@ Event::assertDispatched(ThreadTokenStreamed::class, function ($event) use ($thre
     return $event->broadcastAs() === 'agent.thread.token';
 });
 
-// ❌ Avoid legacy patterns  
+// ❌ Avoid legacy patterns
 Broadcast::fake(); // Doesn't work with current driver setup
 $event = new AgentMessageCreated(...); // Legacy event
 ```

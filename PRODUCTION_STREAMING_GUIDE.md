@@ -673,7 +673,7 @@ cd backend && php artisan test tests/Feature/Streaming/BroadcastContractTest.php
 
 # Expected output:
 ✓ broadcast contract private channel and seq
-✓ private channel uses correct naming convention  
+✓ private channel uses correct naming convention
 ✓ event structure contains required fields
 ✓ streaming service maintains sequence integrity
 
@@ -683,6 +683,7 @@ Tests: 4 passed (17 assertions)
 ### **Legacy Test Retirement**
 
 The following legacy tests were **retired** due to architectural mismatches:
+
 - ~~`AgentBroadcastingTest.php`~~ - Used outdated schema (`workspaces.user_id`) and legacy patterns
 - ~~`StreamingBroadcastTest.php`~~ - Wrong method signatures and import paths
 

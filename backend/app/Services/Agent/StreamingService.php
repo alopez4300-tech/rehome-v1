@@ -100,7 +100,7 @@ class StreamingService
 
         // Clean up sequence cache (belt-and-suspenders since TTL will handle it)
         cache()->forget("ai:seq:{$streamId}");
-        
+
         // Keep done flag for idempotency - it will expire naturally per TTL
     }
 
