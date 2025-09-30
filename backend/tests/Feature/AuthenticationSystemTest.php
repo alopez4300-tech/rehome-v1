@@ -26,7 +26,7 @@ class AuthenticationSystemTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function system_admin_has_global_access()
     {
         $workspace = Workspace::factory()->create();
@@ -38,7 +38,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertTrue(Gate::forUser($systemAdmin)->allows('manage-current-workspace'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function workspace_admin_has_workspace_access_only()
     {
         $workspace = Workspace::factory()->create();
@@ -56,7 +56,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertTrue(Gate::forUser($workspaceAdmin)->allows('manage-current-workspace'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function workspace_owner_has_workspace_access()
     {
         $workspace = Workspace::factory()->create();
@@ -74,7 +74,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertTrue(Gate::forUser($workspaceOwner)->allows('manage-current-workspace'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function regular_user_has_no_admin_access()
     {
         $workspace = Workspace::factory()->create();
@@ -92,7 +92,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertFalse(Gate::forUser($regularUser)->allows('manage-current-workspace'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function user_without_workspace_has_no_workspace_admin_access()
     {
         $user = User::factory()->create(['current_workspace_id' => null]);
@@ -103,7 +103,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertFalse(Gate::forUser($user)->allows('manage-current-workspace'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function workspace_admin_cannot_access_other_workspaces()
     {
         $workspace1 = Workspace::factory()->create();
@@ -122,7 +122,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertFalse($workspaceAdmin->isWorkspaceAdmin($workspace2->id));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function login_response_redirects_correctly()
     {
         $workspace = Workspace::factory()->create();
@@ -169,7 +169,7 @@ class AuthenticationSystemTest extends TestCase
         $this->assertEquals(url('/app'), $response->getTargetUrl());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function workspace_member_uniqueness_is_enforced()
     {
         $workspace = Workspace::factory()->create();

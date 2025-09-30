@@ -1,112 +1,84 @@
 name: CI
 
 on:
-  push:
-    branches: ["**"]
   pull_request:
-    branches: ["**"]
+  push:
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  fast-gate:
+  php:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: rehome
-          MYSQL_USER: app
-          MYSQL_PASSWORD: app
-          MYSQL_ROOT_PASSWORD: root
-        ports: ["3306:3306"]
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost -p$MYSQL_ROOT_PASSWORD"
-          --health-interval=10s --health-timeout=5s --health-retries=10
-
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping || exit 1"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 20
-
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl, pdo_sqlite
+          coverage: none
+
+      - name: Composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: App key + env
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+
+      - name: Block deprecated PHPUnit annotations
+        run: |
+          if grep -RIn "@test\|@covers\|@dataProvider\|@depends" tests/; then
+            echo "Deprecated PHPUnit annotations detected. Use attributes." && exit 1
+          fi
+
+      - name: Static checks (Rector dry-run + Pint test)
+        run: |
+          composer rector
+          composer pint
+
+      - name: Run tests (strict)
+        run: composer test
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.3"
-          extensions: mbstring, intl, pdo_mysql, zip, redis
-          coverage: none
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            backend/vendor
-            ~/.composer/cache
-          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: frontend/node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-npm-
-
-      - name: Backend setup
+      - name: Lint & Typecheck
         run: |
-          cd backend
-          composer validate --strict
-          composer install --no-progress --prefer-dist --no-dev
-          composer audit --no-interaction || true
-          cp .env.ci .env
-          php -v
-          php artisan --version
-          php artisan key:generate --force
-          php artisan config:cache
-          php artisan route:cache
-          php artisan migrate --force
-
-      - name: Frontend setup
-        run: |
-          cd frontend
-          npm ci
-
-      - name: Backend - Lint & Typecheck
-        run: |
-          cd backend
-          composer run-script lint
-          composer run-script typecheck
-
-      - name: Backend - Unit Tests
-        run: |
-          cd backend
-          composer run-script test
-
-      - name: Frontend - Lint & Typecheck
-        run: |
-          cd frontend
           npm run lint
           npm run typecheck
 
-      - name: Frontend - Build
-        run: |
-          cd frontend
-          npm run build
+      - name: Build
+        run: npm run build
 
   full-gate:
     needs: fast-gate

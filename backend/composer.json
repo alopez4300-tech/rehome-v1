@@ -29,7 +29,8 @@
     "mockery/mockery": "^1.6",
     "nunomaduro/collision": "^8.1",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^11.0.1"
+    "phpunit/phpunit": "^11.0.1",
+    "rector/rector": "^2.1"
   },
   "autoload": {
     "psr-4": {
@@ -75,6 +76,16 @@
     ],
     "test": [
       "./vendor/bin/phpunit --stop-on-failure"
+    ],
+    "rector": [
+      "./vendor/bin/rector process --dry-run"
+    ],
+    "rector:fix": [
+      "./vendor/bin/rector process"
+    ],
+    "fix": [
+      "@composer rector:fix",
+      "./vendor/bin/pint"
     ]
   },
   "extra": {

@@ -248,6 +248,53 @@ You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you
 
 If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
+## Configuration Profiles & Debugging
+
+### Light Profile (Tests & CI)
+
+The Light profile provides fast, deterministic testing without external services:
+
+- **Database:** SQLite (in-memory for CI)
+- **Cache:** Array driver (no Redis)
+- **Queue:** Sync driver (immediate execution)
+- **Session:** Array driver (no persistence)
+- **Broadcasting:** Log driver (no real-time)
+
+This profile is automatically used in `phpunit.xml` and CI workflows.
+
+### Xdebug Configuration
+
+For debugging AI streaming and real-time features:
+
+**Local Development (with Xdebug):**
+
+```bash
+# Enable Xdebug for debugging
+export XDEBUG_MODE=debug
+make test
+
+# Or disable for faster execution
+export XDEBUG_MODE=off
+make test
+```
+
+**VS Code Launch Configuration:**
+Add to `.vscode/launch.json` for debugging PHPUnit tests:
+
+```json
+{
+  "name": "Listen for Xdebug (PHPUnit)",
+  "type": "php",
+  "request": "launch",
+  "port": 9003,
+  "pathMappings": {
+    "/app": "${workspaceFolder}/backend"
+  }
+}
+```
+
+The CI environment automatically disables Xdebug (`XDEBUG_MODE=off`) for performance.
+
 ## Laravel Sponsors
 
 We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).

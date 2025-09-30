@@ -23,7 +23,7 @@ class SmokeTest extends TestCase
         Role::create(['name' => 'member', 'guard_name' => 'web']);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function application_boots_successfully(): void
     {
         // Simple smoke test - verify helper functions work
@@ -32,7 +32,7 @@ class SmokeTest extends TestCase
         $this->assertTrue(function_exists('ws'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function system_admin_can_crud_projects(): void
     {
         $admin = User::factory()->create();
@@ -55,7 +55,7 @@ class SmokeTest extends TestCase
         $this->assertNotNull(Project::find($project->id));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function user_roles_work_correctly(): void
     {
         $systemAdmin = User::factory()->create();
@@ -68,7 +68,7 @@ class SmokeTest extends TestCase
         $this->assertFalse($regularUser->isSystemAdmin());
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function feature_flags_work_correctly(): void
     {
         // Test feature function
@@ -85,7 +85,7 @@ class SmokeTest extends TestCase
         $this->assertFalse(profile('scale'));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function multi_tenant_scoping_excludes_system_admins(): void
     {
         if (! feature('multi_tenant')) {

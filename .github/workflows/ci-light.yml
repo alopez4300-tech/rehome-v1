@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      XDEBUG_MODE: off
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, intl, pdo_sqlite
+          coverage: none
+
+      - name: Composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: App key + env
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+
+      - name: Block deprecated PHPUnit annotations
+        run: |
+          if grep -RIn "@test\|@covers\|@dataProvider\|@depends" tests/; then
+            echo "Deprecated PHPUnit annotations detected. Use attributes." && exit 1
+          fi
+
+      - name: Static checks (Rector dry-run + Pint test)
+        run: |
+          composer rector
+          composer pint
+
+      - name: Run tests (strict)
+        run: composer test
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint & Typecheck
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Build
+        run: npm run build

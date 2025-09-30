@@ -67,7 +67,7 @@ class DatabaseConstraintsTest extends TestCase
         $this->assertDatabaseMissing('project_user', ['project_id' => $proj->id, 'user_id' => $u2->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function enforces_unique_workspace_id_user_id_on_workspace_members()
     {
         $ws = Workspace::factory()->create();
@@ -90,7 +90,7 @@ class DatabaseConstraintsTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function cascades_workspace_members_on_workspace_delete()
     {
         $ws = Workspace::factory()->create();
@@ -116,7 +116,7 @@ class DatabaseConstraintsTest extends TestCase
         $this->assertDatabaseMissing('workspace_members', ['workspace_id' => $ws->id, 'user_id' => $user2->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function enforces_project_scoping_to_workspace()
     {
         $wsA = Workspace::factory()->create(['name' => 'Workspace A']);
@@ -141,7 +141,7 @@ class DatabaseConstraintsTest extends TestCase
         $this->assertFalse($visibleProjects->contains($projectB));
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function cascades_project_members_on_project_delete()
     {
         $ws = Workspace::factory()->create();
@@ -163,7 +163,7 @@ class DatabaseConstraintsTest extends TestCase
         $this->assertDatabaseMissing('project_members', ['project_id' => $projectId, 'user_id' => $user2->id]);
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function workspace_member_roles_are_properly_constrained()
     {
         $ws = Workspace::factory()->create();
@@ -183,7 +183,7 @@ class DatabaseConstraintsTest extends TestCase
         }
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function user_can_be_member_of_multiple_workspaces()
     {
         $ws1 = Workspace::factory()->create(['name' => 'Workspace 1']);

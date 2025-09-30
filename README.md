@@ -129,7 +129,71 @@ make horizon           # Start queue dashboard
 **AI System:** OpenAI/Anthropic integration, token streaming, cost tracking
 **Infrastructure:** Docker, Laravel Horizon, Laravel Reverb, S3, Resend
 
-## 📚 For Developers
+## � CI & Quality Gates
+
+ReHome enforces strict quality standards through automated CI/CD pipelines aligned with the **Light Profile** for fast, deterministic testing.
+
+### Quality Standards
+
+- **🧪 Strict PHPUnit**: Random execution order, fails on warnings/risky tests
+- **🔍 Static Analysis**: PHPStan level 1 with baseline, no regressions allowed
+- **🎨 Code Formatting**: Laravel Pint with automatic fixes
+- **⚡ Code Modernization**: Rector for PHP 8+ features and PHPUnit attributes
+- **🚫 Deprecated Patterns**: CI blocks deprecated PHPUnit annotations
+
+### Composer Scripts
+
+```bash
+# Quality assurance (recommended workflow)
+composer test      # Run tests with strict PHPUnit configuration
+composer rector    # Check for code modernization opportunities (dry-run)
+composer pint      # Check code formatting (test mode)
+composer typecheck # Run PHPStan static analysis
+
+# Apply fixes
+composer rector:fix # Apply Rector modernizations
+composer fix       # Apply Rector + Pint formatting
+```
+
+### Makefile Shortcuts
+
+```bash
+# Backend development (from /backend directory)
+make test          # Run PHPUnit tests
+make lint          # Check formatting and modernization
+make fix           # Apply all code fixes
+make qa            # Run complete quality assurance suite
+```
+
+### Light Profile Testing
+
+Tests use the **Light Profile** for speed and reliability:
+
+- **SQLite** database (`:memory:` for tests)
+- **Array** cache driver (no Redis required)
+- **Sync** queue connection (immediate execution)
+- **Array** session driver
+- **Log** broadcast driver
+
+This ensures tests are:
+
+- ⚡ **Fast**: No external services to boot
+- 🔒 **Deterministic**: No service flakiness or timing issues
+- 📦 **Hermetic**: No PHP extensions required (e.g., phpredis)
+- 🔄 **Consistent**: Same behavior across local/CI environments
+
+### CI Pipeline
+
+GitHub Actions automatically:
+
+1. **Validates** composer.json and runs security audits
+2. **Blocks** deprecated PHPUnit annotations (`@test`, `@covers`, etc.)
+3. **Runs** Rector (dry-run) to catch modernization opportunities
+4. **Checks** code formatting with Pint
+5. **Executes** full test suite with strict PHPUnit configuration
+6. **Caches** dependencies for faster subsequent runs
+
+## �📚 For Developers
 
 ### Documentation
 
