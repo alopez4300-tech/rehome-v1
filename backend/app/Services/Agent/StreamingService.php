@@ -5,6 +5,7 @@ namespace App\Services\Agent;
 use App\Models\AgentThread;
 use App\Models\AgentRun;
 use App\Events\Agent\AgentMessageCreated;
+use App\Events\Agent\ThreadTokenStreamed;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -50,14 +51,12 @@ class StreamingService
         string $streamId,
         string $token
     ): void {
-        // Broadcast token chunk
-        broadcast(new AgentMessageCreated([
-            'thread_id' => $thread->id,
-            'run_id' => $run->id,
-            'stream_id' => $streamId,
-            'type' => 'token',
-            'content' => $token,
+        // Broadcast token chunk via ThreadTokenStreamed (Phase 3: Real-time AI streaming)
+        broadcast(new ThreadTokenStreamed($thread->id, [
+            'token' => $token,
             'done' => false,
+            'stream_id' => $streamId,
+            'run_id' => $run->id,
         ]));
     }
 
@@ -78,14 +77,13 @@ class StreamingService
             'response_length' => strlen($fullResponse),
         ]);
 
-        // Broadcast stream end event
-        broadcast(new AgentMessageCreated([
-            'thread_id' => $thread->id,
-            'run_id' => $run->id,
-            'stream_id' => $streamId,
-            'type' => 'stream_end',
-            'content' => $fullResponse,
+        // Broadcast stream end event via ThreadTokenStreamed (Phase 3: Real-time AI streaming)
+        broadcast(new ThreadTokenStreamed($thread->id, [
+            'token' => '', // No more tokens
             'done' => true,
+            'stream_id' => $streamId,
+            'run_id' => $run->id,
+            'full_response' => $fullResponse,
             'metadata' => $metadata,
         ]));
     }

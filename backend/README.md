@@ -107,6 +107,124 @@ if (feature('cost_tracking')) {
 }
 ```
 
+## 🔄 Phase 2: Event System & Broadcasting
+
+Real-time features powered by Laravel Reverb and Echo.
+
+### Reverb & Echo
+
+- **Broadcasting default:** `reverb`
+- **Channels:**
+  - `agent.thread.{threadId}` - AI agent streaming updates
+  - `presence.workspace.{workspaceId}` - Online workspace members
+- **Server:** `make reverb` (port 8080 by default; forward if Codespaces)
+- **Echo config:** `resources/js/echo.js` with VITE*REVERB*\* vars
+- **Test:** `make test-agent-streaming`
+
+### Usage Examples
+
+**Blade/Alpine (listening to AI streams):**
+
+```blade
+<div
+  x-data
+  x-init="
+    Echo.channel('agent.thread.{{ $thread->id }}')
+      .listen('.Agent.Token', (e) => {
+        console.log('Agent token chunk', e)
+        // append to stream buffer / update UI
+      })
+  "
+></div>
+```
+
+**Broadcasting from AI services:**
+
+```php
+use App\Events\Agent\ThreadTokenStreamed;
+
+// In StreamingService
+broadcast(new ThreadTokenStreamed($thread->id, [
+    'token' => $chunk,
+    'done' => false
+]));
+```
+
+### Development Commands
+
+```bash
+# Validate broadcasting config
+make validate-websockets
+
+# Start Reverb server (forward port 8080 in Codespaces)
+make reverb
+
+# Test event dispatch
+make test-agent-streaming
+```
+
+## 🤖 Phase 3: AI Token Streaming Integration
+
+Real-time AI responses with live token streaming to the frontend.
+
+### StreamingService Integration
+
+The `StreamingService` now broadcasts live AI tokens via `ThreadTokenStreamed` events:
+
+```php
+// app/Services/Agent/StreamingService.php
+
+public function streamToken(AgentThread $thread, AgentRun $run, string $streamId, string $token): void
+{
+    // Broadcast token chunk via ThreadTokenStreamed (Phase 3: Real-time AI streaming)
+    broadcast(new ThreadTokenStreamed($thread->id, [
+        'token' => $token,
+        'done' => false,
+        'stream_id' => $streamId,
+        'run_id' => $run->id,
+    ]));
+}
+```
+
+### Frontend Integration
+
+Use the provided Blade component for live AI responses:
+
+```blade
+{{-- Include in your view --}}
+@include('components.realtime-ai-response', [
+    'thread' => $thread,
+    'streamId' => $streamId
+])
+```
+
+**Features:**
+- ✅ Live token-by-token streaming
+- ✅ Visual streaming indicators  
+- ✅ Auto-scroll to latest content
+- ✅ Stream completion detection
+- ✅ Responsive design with Tailwind CSS
+
+### Manual Integration (Alpine.js)
+
+```blade
+<div x-data="{ tokens: [], isStreaming: false }"
+     x-init="
+         Echo.channel('agent.thread.{{ $thread->id }}')
+             .listen('.Agent.Token', (event) => {
+                 if (event.done) {
+                     isStreaming = false;
+                 } else {
+                     isStreaming = true;
+                     tokens.push(event.token);
+                 }
+             });
+     ">
+    <div x-text="tokens.join('')"></div>
+    <div x-show="isStreaming">🤖 Generating...</div>
+</div>
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

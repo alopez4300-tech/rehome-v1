@@ -212,4 +212,18 @@ class User extends Authenticatable
                         $query->where('workspace_id', $this->workspace_id);
                     });
     }
+
+    /**
+     * Check if user is a member of the given workspace (for channel authorization)
+     */
+    public function isMemberOf(int $workspaceId): bool
+    {
+        // System admin can access all workspaces
+        if ($this->isSystemAdmin()) {
+            return true;
+        }
+
+        // Check if user's workspace matches
+        return $this->workspace_id === $workspaceId;
+    }
 }

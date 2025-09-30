@@ -15,9 +15,25 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 /*
 |--------------------------------------------------------------------------
-| Agent Channel Authorization
+| Agent Channel Authorization (Phase 2: Broadcasting)
 |--------------------------------------------------------------------------
 */
+
+Broadcast::channel('agent.thread.{threadId}', function ($user, int $threadId) {
+    $thread = AgentThread::query()->find($threadId);
+    return $thread && $thread->canAccess($user);
+});
+
+// Presence channel for "who's online / typing" in a workspace
+Broadcast::channel('presence.workspace.{workspaceId}', function ($user, int $workspaceId) {
+    if (! $user->isMemberOf($workspaceId)) return false;
+
+    return [
+        'id'   => $user->id,
+        'name' => $user->name,
+        // add avatar, role, etc. if useful
+    ];
+});
 
 // Agent thread channels - role-based access control
 Broadcast::channel('agent.thread.{threadId}', function ($user, $threadId) {

@@ -408,3 +408,15 @@ fresh: ## Fresh installation (clean + setup)
 	$(MAKE) down
 	$(MAKE) setup
 	$(MAKE) up
+
+# === Phase 2: Event System & Broadcasting ===
+validate-websockets: ## Validate websocket configuration
+	@cd backend && php artisan config:show broadcasting | sed -n '1,120p'
+	@cd backend && php artisan tinker --execute="echo 'Broadcast default: '.config('broadcasting.default').PHP_EOL;"
+	@echo "Try starting Reverb: php artisan reverb:start --host=0.0.0.0 --port=$${REVERB_PORT:-8080}"
+
+reverb: ## Start Laravel Reverb server
+	@cd backend && php artisan reverb:start --host=0.0.0.0 --port=$${REVERB_PORT:-8080}
+
+test-agent-streaming: ## Test agent token streaming event
+	@cd backend && php artisan tinker --execute="event(new \\App\\Events\\Agent\\ThreadTokenStreamed(1, ['token' => 'ping', 'done' => false])); echo 'Event dispatched'.PHP_EOL;"

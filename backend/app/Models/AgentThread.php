@@ -13,7 +13,7 @@ class AgentThread extends Model
 
     protected $fillable = [
         'project_id',
-        'user_id', 
+        'user_id',
         'audience',
         'title',
         'metadata'
@@ -58,5 +58,19 @@ class AgentThread extends Model
                     ->whereHas('project', function ($q) use ($user) {
                         $q->where('workspace_id', $user->workspace_id);
                     });
+    }
+
+    /**
+     * Check if user can access this agent thread (for channel authorization)
+     */
+    public function canAccess(User $user): bool
+    {
+        // System admin can access all threads
+        if ($user->isSystemAdmin()) {
+            return true;
+        }
+
+        // Must be in same workspace as project
+        return $this->project && $this->project->workspace_id === $user->workspace_id;
     }
 }
