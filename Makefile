@@ -10,7 +10,7 @@ COMPOSER=docker compose exec $(APP) composer
 NPM=npm --prefix backend
 
 .DEFAULT_GOAL := help
-.PHONY: help setup perms up down logs clean restart status
+.PHONY: help setup perms up down logs clean restart status light scale
 
 help: ## Show this help message
 	@echo "🚀 Rehome v1 - Editor-Agnostic Commands"
@@ -24,6 +24,28 @@ setup: ## Install dependencies & build assets
 	$(NPM) install
 	$(NPM) run build
 	@echo "✅ Setup complete!"
+
+# === Profile Management ===
+light: ## Switch to light-weight profile (minimal overhead)
+	@echo "💡 Switching to light profile..."
+	@if [ -f backend/.env.light.example ]; then \
+		cp backend/.env.light.example backend/.env; \
+		echo "✅ Switched to light profile (sqlite, sync queues, file cache)"; \
+		echo "📋 Profile: $(shell cd backend && php artisan tinker --execute="echo config('feature.profile');" 2>/dev/null || echo 'light')"; \
+	else \
+		echo "❌ .env.light.example not found"; \
+	fi
+
+scale: ## Switch to scale profile (production features)
+	@echo "🚀 Switching to scale profile..."
+	@if [ -f backend/.env.scale.example ]; then \
+		cp backend/.env.scale.example backend/.env; \
+		echo "✅ Switched to scale profile (mysql/redis, async queues, redis cache)"; \
+		echo "📋 Profile: $(shell cd backend && php artisan tinker --execute="echo config('feature.profile');" 2>/dev/null || echo 'scale')"; \
+		echo "⚠️  Don't forget to update DB credentials and Redis settings"; \
+	else \
+		echo "❌ .env.scale.example not found"; \
+	fi
 
 perms: ## Fix permissions for Codespaces -> other IDEs
 	@echo "🔧 Fixing file permissions..."

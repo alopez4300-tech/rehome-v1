@@ -7,6 +7,98 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+# Rehome v1 Backend
+
+A multi-tenant project management platform built with Laravel 11, featuring a 3-surface architecture and flexible operational profiles.
+
+## 🏗️ Architecture Overview
+
+### 3-Surface Architecture
+- **System Admin** (`/admin`) - Global system administration (Filament)
+- **Workspace Admin** (`/ops`) - Workspace-scoped operations (Filament) 
+- **App SPA** (`/app`) - Project-focused user interface (React/Vue)
+
+### Authentication System
+- **Laravel Sanctum** SPA authentication with smart redirects
+- **Spatie Laravel Permission** for role-based access control
+- **Multi-workspace support** with flexible user memberships
+- **Cross-database compatibility** (SQLite, MySQL, PostgreSQL)
+
+## 🚀 Operational Profiles
+
+The application supports two operational profiles via the `APP_PROFILE` environment variable:
+
+### Light Profile (Default)
+Minimal overhead configuration perfect for development and small deployments:
+```bash
+make light  # Switch to light profile
+```
+
+**Configuration:**
+- **Database:** SQLite (single file)
+- **Queue:** Sync (immediate processing)
+- **Cache:** File-based
+- **Broadcasting:** Log-based
+- **Features:** Essential features only
+
+**Use Cases:** Development, small teams, proof-of-concept deployments
+
+### Scale Profile  
+Production-optimized configuration with full feature set:
+```bash
+make scale  # Switch to scale profile
+```
+
+**Configuration:**
+- **Database:** MySQL/PostgreSQL with connection pooling
+- **Queue:** Redis-backed async processing
+- **Cache:** Redis with distributed caching
+- **Broadcasting:** Real-time with Pusher/WebSocket
+- **Features:** All features enabled including cost tracking, real-time updates
+
+**Use Cases:** Production, high-traffic environments, enterprise deployments
+
+## 🎛️ Feature Flag System
+
+Dynamic feature control via environment variables:
+
+```php
+// Check if a feature is enabled
+if (feature('cost_tracking')) {
+    // Cost tracking logic
+}
+
+// Get current profile
+$currentProfile = profile(); // 'light' or 'scale'
+
+// Check specific profile
+if (profile('scale')) {
+    // Scale-specific logic
+}
+```
+
+### Available Feature Flags
+
+| Feature | Light | Scale | Description |
+|---------|-------|-------|-------------|
+| `FEATURE_COST_TRACKING` | `false` | `true` | Project cost analysis and budgeting |
+| `FEATURE_REALTIME` | `false` | `true` | Real-time updates and notifications |
+| `FEATURE_MULTI_TENANT` | `true` | `true` | Workspace isolation and scoping |
+| `FEATURE_CLIENT_PORTAL` | `false` | `true` | External client access portal |
+
+### Zero-Overhead Design
+
+Features use the **null object pattern** - when disabled, they consume zero resources:
+
+```php
+// In FeatureServiceProvider
+if (feature('cost_tracking')) {
+    $this->app->bind(CostMeter::class, DatabaseCostMeter::class);
+} else {
+    $this->app->bind(CostMeter::class, NullCostMeter::class); // No-op implementation
+}
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
