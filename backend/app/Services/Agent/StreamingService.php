@@ -52,11 +52,17 @@ class StreamingService
         string $token
     ): void {
         // Broadcast token chunk via ThreadTokenStreamed (Phase 3: Real-time AI streaming)
+        $seq = cache()->increment("ai:seq:{$streamId}");
+        
+        // TTL hygiene: Set 15-minute expiry on sequence key as belt-and-suspenders cleanup
+        cache()->put("ai:seq:{$streamId}", $seq, now()->addMinutes(15));
+        
         broadcast(new ThreadTokenStreamed($thread->id, [
             'token' => $token,
             'done' => false,
             'stream_id' => $streamId,
             'run_id' => $run->id,
+            'seq' => $seq,
         ]));
     }
 
@@ -70,6 +76,10 @@ class StreamingService
         string $fullResponse,
         array $metadata = []
     ): void {
+        // First writer wins; others bail (idempotent endStream)
+        $flag = cache()->add("ai:done:{$streamId}", 1, now()->addMinutes(5));
+        if (! $flag) return;
+
         Log::info('Ending agent response stream', [
             'thread_id' => $thread->id,
             'run_id' => $run->id,
@@ -78,14 +88,18 @@ class StreamingService
         ]);
 
         // Broadcast stream end event via ThreadTokenStreamed (Phase 3: Real-time AI streaming)
+        $seq = cache()->increment("ai:seq:{$streamId}");
         broadcast(new ThreadTokenStreamed($thread->id, [
-            'token' => '', // No more tokens
+            'token' => null,
             'done' => true,
             'stream_id' => $streamId,
             'run_id' => $run->id,
+            'seq' => $seq,
             'full_response' => $fullResponse,
-            'metadata' => $metadata,
         ]));
+
+        cache()->forget("ai:seq:{$streamId}");
+        cache()->forget("ai:done:{$streamId}");
     }
 
     /**

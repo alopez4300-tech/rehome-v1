@@ -22,35 +22,45 @@ jobs:
           --health-cmd="mysqladmin ping -h localhost -p$MYSQL_ROOT_PASSWORD"
           --health-interval=10s --health-timeout=5s --health-retries=10
 
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping || exit 1"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
-        with: 
+        with:
           node-version: "20"
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: frontend/package-lock.json
-          
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
-          extensions: mbstring, intl, pdo_mysql, zip
+          extensions: mbstring, intl, pdo_mysql, zip, redis
           coverage: none
-          
+
       - name: Cache composer dependencies
         uses: actions/cache@v4
         with:
           path: backend/vendor
           key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
-          
+
       - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
-          
+
       - name: Backend setup
         run: |
           cd backend
@@ -60,29 +70,29 @@ jobs:
           php artisan config:cache
           php artisan route:cache
           php artisan migrate --force
-          
+
       - name: Frontend setup
         run: |
           cd frontend
           npm ci
-          
+
       - name: Backend - Lint & Typecheck
         run: |
           cd backend
           composer run-script lint
           composer run-script typecheck
-          
+
       - name: Backend - Unit Tests
         run: |
           cd backend
           composer run-script test
-          
+
       - name: Frontend - Lint & Typecheck
         run: |
           cd frontend
           npm run lint
           npm run typecheck
-          
+
       - name: Frontend - Build
         run: |
           cd frontend
@@ -92,7 +102,7 @@ jobs:
     needs: fast-gate
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     services:
       mysql:
         image: mysql:8.0
@@ -105,27 +115,27 @@ jobs:
         options: >-
           --health-cmd="mysqladmin ping -h localhost -p$MYSQL_ROOT_PASSWORD"
           --health-interval=10s --health-timeout=5s --health-retries=10
-          
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: actions/setup-node@v4
-        with: 
+        with:
           node-version: "20"
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: frontend/package-lock.json
-          
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
           extensions: mbstring, intl, pdo_mysql, zip
           coverage: none
-          
+
       - name: Install dependencies
         run: |
           cd backend && composer install --no-progress --prefer-dist
           cd ../frontend && npm ci
-          
+
       - name: Backend - Full test suite
         run: |
           cd backend
@@ -134,32 +144,48 @@ jobs:
           php artisan migrate --force
           php artisan db:seed --force
           composer run-script test
-          
+
+      - name: Streaming - Contract tests
+        run: |
+          cd backend
+          echo "CACHE_STORE=redis" >> .env
+          echo "REDIS_HOST=127.0.0.1" >> .env
+          echo "REDIS_PORT=6379" >> .env
+          echo "BROADCAST_DRIVER=reverb" >> .env
+          echo "REVERB_APP_KEY=ci-test" >> .env
+          vendor/bin/phpunit tests/Feature/Streaming/BroadcastContractTest.php --colors=always
+
+      - name: Streaming - Infrastructure validation
+        run: |
+          cd backend
+          redis-cli ping
+          php artisan tinker --execute="cache()->put('ci-test', 'success', 60); echo 'Cache: ' . cache()->get('ci-test');"
+
       - name: Security audits
         run: |
           cd backend && composer audit --no-interaction || true
           cd ../frontend && npm audit --audit-level=high || true
-          
+
       - name: Frontend - Component tests
         run: |
           cd frontend
           npm run test:component
-          
+
       - name: Install Playwright
         run: |
           cd frontend
           npx playwright install --with-deps
-          
+
       - name: Frontend - E2E tests
         run: |
           cd frontend
           npm run test:e2e
-          
+
       - name: Storybook - Build
         run: |
           cd frontend
           npm run build:storybook
-          
+
       - name: Lighthouse CI
         run: |
           cd frontend

@@ -20,8 +20,13 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 */
 
 Broadcast::channel('agent.thread.{threadId}', function ($user, int $threadId) {
-    $thread = AgentThread::query()->find($threadId);
-    return $thread && $thread->canAccess($user);
+    // Only allow if the user can view this thread
+    return AgentThread::query()
+        ->whereKey($threadId)
+        ->whereHas('project', function ($q) use ($user) {
+            $q->where('workspace_id', $user->workspace_id ?? $user->current_workspace_id);
+        })
+        ->exists();
 });
 
 // Presence channel for "who's online / typing" in a workspace

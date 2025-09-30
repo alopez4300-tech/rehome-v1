@@ -199,8 +199,9 @@ Use the provided Blade component for live AI responses:
 ```
 
 **Features:**
+
 - ✅ Live token-by-token streaming
-- ✅ Visual streaming indicators  
+- ✅ Visual streaming indicators
 - ✅ Auto-scroll to latest content
 - ✅ Stream completion detection
 - ✅ Responsive design with Tailwind CSS
