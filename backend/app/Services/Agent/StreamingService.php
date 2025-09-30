@@ -53,10 +53,10 @@ class StreamingService
     ): void {
         // Broadcast token chunk via ThreadTokenStreamed (Phase 3: Real-time AI streaming)
         $seq = cache()->increment("ai:seq:{$streamId}");
-        
+
         // TTL hygiene: Set 15-minute expiry on sequence key as belt-and-suspenders cleanup
         cache()->put("ai:seq:{$streamId}", $seq, now()->addMinutes(15));
-        
+
         broadcast(new ThreadTokenStreamed($thread->id, [
             'token' => $token,
             'done' => false,
@@ -98,8 +98,10 @@ class StreamingService
             'full_response' => $fullResponse,
         ]));
 
+        // Clean up sequence cache (belt-and-suspenders since TTL will handle it)
         cache()->forget("ai:seq:{$streamId}");
-        cache()->forget("ai:done:{$streamId}");
+        
+        // Keep done flag for idempotency - it will expire naturally per TTL
     }
 
     /**

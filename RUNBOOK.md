@@ -3,11 +3,13 @@
 ## 🔧 Processes
 
 ### Start Reverb (WebSockets)
+
 - **Direct**: `php artisan reverb:start --host=0.0.0.0 --port=8080`
 - **Supervisor**: `sudo supervisorctl start rehome-reverb`
 - **Systemd**: `sudo systemctl start rehome-reverb`
 
 ### Start Workers (Queues)
+
 - **Direct**: `php artisan queue:work --queue=high,default`
 - **Horizon**: `php artisan horizon` or `sudo supervisorctl start rehome-horizon`
 - **Supervisor**: `sudo supervisorctl start rehome-workers`
@@ -15,21 +17,24 @@
 ## ✅ Health Checks (Daily)
 
 ### System Health
+
 - **Redis**: `redis-cli ping` → `PONG`
 - **Reverb**: `ps aux | grep "artisan reverb"` or `curl http://localhost:8080/health`
 - **App Log**: `tail -n 200 storage/logs/laravel.log | grep -E "StreamingService|ThreadToken" -n`
 
 ### Quick Status
+
 ```bash
 # All-in-one health check
 redis-cli ping && echo "✅ Redis OK" || echo "❌ Redis DOWN"
-pgrep -f "artisan reverb" && echo "✅ Reverb OK" || echo "❌ Reverb DOWN"  
+pgrep -f "artisan reverb" && echo "✅ Reverb OK" || echo "❌ Reverb DOWN"
 curl -s http://localhost:8080/health | grep -q "ok" && echo "✅ WebSocket OK" || echo "❌ WebSocket DOWN"
 ```
 
 ## 🧪 Smoke Test (End-to-end)
 
 ### Step 1: Identify Thread/Run
+
 ```bash
 # Use existing or create test data
 php artisan tinker --execute="
@@ -41,6 +46,7 @@ echo 'RUN=' . \$run->id . PHP_EOL;
 ```
 
 ### Step 2: Emit Tokens
+
 ```bash
 # Replace {thread_id} and {run_id} with values from Step 1
 php artisan stream:smoke {thread_id} {run_id} --stream_id=ops-smoke
@@ -49,10 +55,10 @@ php artisan stream:smoke {thread_id} {run_id} --stream_id=ops-smoke
 ```
 
 ### Step 3: Browser Verification
+
 ```javascript
 // Open browser dev tools on any page with Echo loaded, execute:
-Echo.private('agent.thread.{thread_id}')
-    .listen('.agent.thread.token', e => console.log('📡 Token:', e));
+Echo.private("agent.thread.{thread_id}").listen(".agent.thread.token", e => console.log("📡 Token:", e));
 
 // Re-run Step 2 and confirm tokens appear in real-time
 ```
@@ -60,16 +66,19 @@ Echo.private('agent.thread.{thread_id}')
 ## 🔧 Quick Fixes
 
 ### No Tokens in Browser
+
 1. **Check Private Channel Auth**: Network tab → `/broadcasting/auth` should return 200
 2. **Verify Environment**: `php artisan config:show broadcasting | grep reverb`
 3. **Rebuild Assets**: `npm run build` or restart Vite dev server after env changes
 
 ### Reverb Won't Start / Port in Use
+
 1. **Check Port**: `lsof -i :8080` then kill stale processes
 2. **Firewall**: Ensure port 8080 is open internally (not public)
 3. **Restart**: `sudo supervisorctl restart rehome-reverb`
 
 ### Redis Errors
+
 1. **Memory Check**: `redis-cli info memory` (look for memory pressure)
 2. **Connection Test**: `redis-cli monitor` (watch live commands)
 3. **Restart Redis**: `sudo systemctl restart redis` then verify `CACHE_STORE=redis`
@@ -77,6 +86,7 @@ Echo.private('agent.thread.{thread_id}')
 ## 📊 Metrics to Watch
 
 ### Redis Performance
+
 ```bash
 # Hit ratio (should be >95%)
 redis-cli info stats | grep -E "keyspace_hits:|keyspace_misses:"
@@ -89,6 +99,7 @@ redis-cli info stats | grep "instantaneous_ops_per_sec"
 ```
 
 ### Streaming Health
+
 ```bash
 # Active sequences (should trend to zero)
 redis-cli --scan --pattern "ai:seq:*" | wc -l
@@ -101,6 +112,7 @@ redis-cli --scan --pattern "ai:seq:*" | head -5
 ```
 
 ### Application Metrics
+
 - **Token Latency**: p95 <50ms from `streamToken()` to client
 - **Error Rate**: <10 errors/5min containing `StreamingService` or `ThreadToken`
 - **Memory Usage**: <50MB per worker process
@@ -108,18 +120,20 @@ redis-cli --scan --pattern "ai:seq:*" | head -5
 ## 🚨 Alerts (Suggested Monitoring)
 
 ### Critical Alerts
+
 ```bash
 # Reverb process down
 ! pgrep -f "artisan reverb" && echo "CRITICAL: Reverb server offline"
 
-# Redis unavailable  
+# Redis unavailable
 ! redis-cli ping &>/dev/null && echo "CRITICAL: Redis server down"
 
 # High error rate
 tail -100 storage/logs/laravel.log | grep -c ERROR | awk '$1 > 10 {print "ALERT: High error rate"}'
 ```
 
-### Warning Alerts  
+### Warning Alerts
+
 ```bash
 # Memory usage high (>1GB Redis)
 redis-cli info memory | grep used_memory | awk -F: '$2 > 1000000000 {print "WARNING: Redis memory >1GB"}'
@@ -131,11 +145,13 @@ redis-cli --scan --pattern "ai:seq:*" | wc -l | awk '$1 > 100 {print "WARNING: M
 ## 🔐 Security
 
 ### Channel Security
+
 - All streaming uses **private channels**: `PrivateChannel('agent.thread.{id}')`
-- Rate limiting: 100 events/minute per thread (adjust as needed)  
+- Rate limiting: 100 events/minute per thread (adjust as needed)
 - WSS via load balancer/proxy; Reverb stays HTTP internally
 
 ### Secrets Management
+
 - Use **unique** `REVERB_APP_KEY/SECRET` (not equal to `APP_KEY`)
 - Rotate quarterly; deploy rolls clients automatically (Echo picks up from Vite env)
 - Store secrets in secure vault (AWS Secrets Manager, etc.)
@@ -143,11 +159,12 @@ redis-cli --scan --pattern "ai:seq:*" | wc -l | awk '$1 > 100 {print "WARNING: M
 ## 🛠️ Useful Commands
 
 ### Configuration
+
 ```bash
 # Clear all cached config
 php artisan optimize:clear
 
-# Inspect broadcast configuration  
+# Inspect broadcast configuration
 php artisan config:show broadcasting
 
 # View current environment
@@ -158,6 +175,7 @@ php artisan tinker --execute="cache()->put('test', 'ok', 60); echo cache()->get(
 ```
 
 ### Debugging
+
 ```bash
 # Tail application logs
 tail -f storage/logs/laravel.log
@@ -173,6 +191,7 @@ php artisan tinker --execute="broadcast(new \App\Events\Agent\ThreadTokenStreame
 ```
 
 ### Maintenance
+
 ```bash
 # Restart all streaming services
 sudo supervisorctl restart rehome-reverb rehome-workers
@@ -187,7 +206,7 @@ du -sh storage/logs/
 ## 📞 Emergency Contacts
 
 - **Tech Lead**: [Your contact info]
-- **DevOps**: [Your contact info]  
+- **DevOps**: [Your contact info]
 - **On-Call**: [Your contact info]
 - **Escalation**: [Manager contact info]
 
@@ -195,16 +214,17 @@ du -sh storage/logs/
 
 ## 🎯 **Quick Reference Card**
 
-| **Command** | **Purpose** |
-|-------------|-------------|
-| `redis-cli ping` | Check Redis connectivity |
-| `php artisan stream:smoke {thread} {run}` | End-to-end smoke test |
-| `ps aux \| grep reverb` | Check Reverb process |
-| `curl localhost:8080/health` | WebSocket health check |
-| `tail -f storage/logs/laravel.log` | Monitor application logs |
-| `supervisorctl status` | Check all service status |
+| **Command**                               | **Purpose**              |
+| ----------------------------------------- | ------------------------ |
+| `redis-cli ping`                          | Check Redis connectivity |
+| `php artisan stream:smoke {thread} {run}` | End-to-end smoke test    |
+| `ps aux \| grep reverb`                   | Check Reverb process     |
+| `curl localhost:8080/health`              | WebSocket health check   |
+| `tail -f storage/logs/laravel.log`        | Monitor application logs |
+| `supervisorctl status`                    | Check all service status |
 
 **🚨 Emergency**: If all else fails, restart everything:
+
 ```bash
 sudo supervisorctl restart all
 redis-cli flushall  # ⚠️  ONLY in dev/staging!
