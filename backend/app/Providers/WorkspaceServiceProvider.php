@@ -27,19 +27,6 @@ class WorkspaceServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Add a helper function to get current workspace
-        if (!function_exists('current_workspace')) {
-            function current_workspace(): ?Workspace {
-                return app('current.workspace');
-            }
-        }
-
-        // Add a helper function to get current workspace ID
-        if (!function_exists('current_workspace_id')) {
-            function current_workspace_id(): ?int {
-                $workspace = current_workspace();
-                return $workspace ? $workspace->id : null;
-            }
-        }
+        // Helper functions moved outside to avoid redeclaration in tests
     }
 }

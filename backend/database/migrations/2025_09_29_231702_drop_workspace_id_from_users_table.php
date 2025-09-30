@@ -27,6 +27,12 @@ return new class extends Migration
                     // Index might not exist
                 }
 
+                try {
+                    $table->dropIndex('users_workspace_id_is_active_index');
+                } catch (\Exception $e) {
+                    // Index might not exist
+                }
+
                 $table->dropColumn('workspace_id');
             }
         });

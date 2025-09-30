@@ -26,7 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'workspace_id',
+        'current_workspace_id',
         'role',
         'is_active',
         'last_active_at',
@@ -65,6 +65,24 @@ class User extends Authenticatable
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
+    }
+
+    /**
+     * Get the current workspace that the user is working in.
+     */
+    public function currentWorkspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class, 'current_workspace_id');
+    }
+
+    /**
+     * All workspace memberships with role on the pivot.
+     */
+    public function workspaceMemberships(): BelongsToMany
+    {
+        return $this->belongsToMany(Workspace::class, 'workspace_members')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     /**
@@ -109,11 +127,50 @@ class User extends Authenticatable
      */
     public function canAccessProject(Project $project): bool
     {
-        if ($this->isWorkspaceAdmin() && $this->workspace_id === $project->workspace_id) {
+        if ($this->isWorkspaceAdmin() && $this->current_workspace_id === $project->workspace_id) {
             return true;
         }
 
         return $this->projects()->where('project_id', $project->id)->exists();
+    }
+
+    /**
+     * System-wide admin (treat 'system-admin' and 'admin' as superusers).
+     */
+    public function isSystemAdmin(): bool
+    {
+        // If you've standardized to just 'admin', this still works.
+        return $this->hasRole('system-admin') || $this->hasRole('admin');
+    }
+
+    /**
+     * Is the user an admin for the given workspace?
+     *
+     * Accepts: Workspace model, workspace id (int/string), or null (uses current_workspace_id).
+     * Returns true for system admins regardless of workspace.
+     */
+    public function isWorkspaceAdmin(Workspace|int|string|null $workspace = null): bool
+    {
+        if ($this->isSystemAdmin()) {
+            return true;
+        }
+
+        // Resolve target workspace id
+        $workspaceId = match (true) {
+            $workspace instanceof Workspace => $workspace->getKey(),
+            is_int($workspace), is_string($workspace) => $workspace,
+            default => $this->current_workspace_id,
+        };
+
+        if (empty($workspaceId)) {
+            return false;
+        }
+
+        // Admin via membership role within that workspace
+        return $this->workspaceMemberships()
+            ->where('workspace_id', $workspaceId)
+            ->whereIn('workspace_members.role', ['admin', 'owner'])
+            ->exists();
     }
 
     /**
