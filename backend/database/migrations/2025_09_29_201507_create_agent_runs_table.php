@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamp('finished_at')->nullable();
             $table->text('error')->nullable();
             $table->timestamps();
-            
+
             $table->index(['thread_id', 'status']);
             $table->index(['provider', 'model']);
             $table->index(['started_at', 'finished_at']);

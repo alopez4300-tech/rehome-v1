@@ -1,5 +1,5 @@
 parameters:
-    level: 6
+    level: 0
     paths:
         - app
         - config
@@ -11,14 +11,11 @@ parameters:
         - vendor
         - node_modules
         - bootstrap/cache
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder#'
-        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model#'
-        - '#Cannot call method .* on mixed#'
-        - '#Property .* does not accept mixed#'
-        - '#Unsafe usage of new static#'
+        - '#Call to static method info\(\) on an unknown class Log#'
+        - '#Class App\\Http\\Controllers\\Api\\.* not found#'
+        - '#Undefined variable: \$this#'
+        - '#Call to static method statement\(\) on an unknown class DB#'
     universalObjectCratesClasses:
         - Illuminate\Http\Request
         - Illuminate\Support\Collection

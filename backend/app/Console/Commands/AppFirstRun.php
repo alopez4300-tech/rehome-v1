@@ -30,10 +30,10 @@ class AppFirstRun extends Command
     public function handle(): int
     {
         // Ensure roles exist
-        foreach (['system-admin','team','consultant','client'] as $roleName) {
+        foreach (['system-admin', 'team', 'consultant', 'client'] as $roleName) {
             \Spatie\Permission\Models\Role::firstOrCreate([
                 'name' => $roleName,
-                'guard_name' => 'web'
+                'guard_name' => 'web',
             ]);
         }
 
@@ -42,7 +42,7 @@ class AppFirstRun extends Command
             ['email' => $this->option('email')],
             [
                 'name' => $this->option('name'),
-                'password' => \Illuminate\Support\Facades\Hash::make($this->option('password'))
+                'password' => \Illuminate\Support\Facades\Hash::make($this->option('password')),
             ]
         );
 
@@ -50,10 +50,10 @@ class AppFirstRun extends Command
 
         // Create or fetch workspace
         $workspace = \App\Models\Workspace::firstOrCreate([
-            'name' => $this->option('workspace')
+            'name' => $this->option('workspace'),
         ], [
             'slug' => \Illuminate\Support\Str::slug($this->option('workspace')),
-            'description' => 'Primary workspace for ' . $this->option('workspace')
+            'description' => 'Primary workspace for '.$this->option('workspace'),
         ]);
 
         // Set current workspace on user (if column exists)
@@ -70,11 +70,11 @@ class AppFirstRun extends Command
             'joined_at' => now(),
         ]);
 
-        $this->info("✅ First run complete:");
+        $this->info('✅ First run complete:');
         $this->info("- User: {$user->email}");
-        $this->info("- Role: system-admin");
+        $this->info('- Role: system-admin');
         $this->info("- Workspace: {$workspace->name} (owner)");
-        $this->info("You can now visit /admin (System Admin) or /ops (Workspace Admin).");
+        $this->info('You can now visit /admin (System Admin) or /ops (Workspace Admin).');
 
         return static::SUCCESS;
     }

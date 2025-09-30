@@ -28,26 +28,27 @@ class AuthDiag extends Command
         $email = $this->argument('email') ?? 'ops@rehome.com';
         $u = \App\Models\User::where('email', $email)->first();
 
-        if (!$u) {
+        if (! $u) {
             $this->error("User not found: {$email}");
+
             return 1;
         }
 
         $wid = $u->current_workspace_id;
         $this->info("User: {$u->email} (id={$u->id})");
-        $this->line("current_workspace_id: " . var_export($wid, true));
-        $this->line('isSystemAdmin(): ' . ($u->isSystemAdmin() ? 'true' : 'false'));
-        $this->line('isWorkspaceAdmin(): ' . ($u->isWorkspaceAdmin() ? 'true' : 'false'));
+        $this->line('current_workspace_id: '.var_export($wid, true));
+        $this->line('isSystemAdmin(): '.($u->isSystemAdmin() ? 'true' : 'false'));
+        $this->line('isWorkspaceAdmin(): '.($u->isWorkspaceAdmin() ? 'true' : 'false'));
 
         $exists = \App\Models\WorkspaceMember::where('workspace_id', $wid)
             ->where('user_id', $u->id)
-            ->whereIn('role', ['owner','admin'])
+            ->whereIn('role', ['owner', 'admin'])
             ->exists();
 
-        $this->line("DB membership exists (owner|admin): " . ($exists ? 'true' : 'false'));
-        $this->line("Gate manage-current-workspace: " . (\Illuminate\Support\Facades\Gate::forUser($u)->allows('manage-current-workspace') ? 'true' : 'false'));
+        $this->line('DB membership exists (owner|admin): '.($exists ? 'true' : 'false'));
+        $this->line('Gate manage-current-workspace: '.(\Illuminate\Support\Facades\Gate::forUser($u)->allows('manage-current-workspace') ? 'true' : 'false'));
 
-        $rows = \App\Models\WorkspaceMember::where('user_id', $u->id)->get(['workspace_id','role']);
+        $rows = \App\Models\WorkspaceMember::where('user_id', $u->id)->get(['workspace_id', 'role']);
         foreach ($rows as $r) {
             $this->line("membership -> workspace_id={$r->workspace_id}, role={$r->role}");
         }

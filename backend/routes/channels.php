@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Broadcast;
 use App\Models\AgentThread;
+use Illuminate\Support\Facades\Broadcast;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,10 +31,12 @@ Broadcast::channel('agent.thread.{threadId}', function ($user, int $threadId) {
 
 // Presence channel for "who's online / typing" in a workspace
 Broadcast::channel('presence.workspace.{workspaceId}', function ($user, int $workspaceId) {
-    if (! $user->isMemberOf($workspaceId)) return false;
+    if (! $user->isMemberOf($workspaceId)) {
+        return false;
+    }
 
     return [
-        'id'   => $user->id,
+        'id' => $user->id,
         'name' => $user->name,
         // add avatar, role, etc. if useful
     ];
@@ -44,7 +46,7 @@ Broadcast::channel('presence.workspace.{workspaceId}', function ($user, int $wor
 Broadcast::channel('agent.thread.{threadId}', function ($user, $threadId) {
     $thread = AgentThread::find($threadId);
 
-    if (!$thread) {
+    if (! $thread) {
         return false;
     }
 

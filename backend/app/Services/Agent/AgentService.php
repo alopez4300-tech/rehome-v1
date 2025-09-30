@@ -2,18 +2,14 @@
 
 namespace App\Services\Agent;
 
-use App\Models\AgentThread;
 use App\Models\AgentMessage;
 use App\Models\AgentRun;
+use App\Models\AgentThread;
 use App\Models\User;
-use App\Services\Agent\ContextBuilder;
-use App\Services\Agent\CostTracker;
-use App\Services\Agent\StreamingService;
-use App\Services\Agent\Providers\OpenAIProvider;
 use App\Services\Agent\Providers\AnthropicProvider;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Services\Agent\Providers\OpenAIProvider;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Agent Service - Main orchestration for AI agent interactions
@@ -24,8 +20,11 @@ use Exception;
 class AgentService
 {
     private ContextBuilder $contextBuilder;
+
     private CostTracker $costTracker;
+
     private StreamingService $streamingService;
+
     private array $config;
 
     public function __construct(
@@ -134,20 +133,20 @@ class AgentService
         $workspace = $thread->project->workspace;
 
         // Check rate limits
-        if (!$this->costTracker->canMakeRequest($user, $workspace)) {
+        if (! $this->costTracker->canMakeRequest($user, $workspace)) {
             throw new Exception('Rate limit exceeded. Please try again later.');
         }
 
         // Check budget constraints
         $budgetStatus = $this->costTracker->checkBudget($user, $workspace);
 
-        if (!$budgetStatus['can_proceed'] && !$budgetStatus['should_degrade']) {
+        if (! $budgetStatus['can_proceed'] && ! $budgetStatus['should_degrade']) {
             throw new Exception('Budget limit exceeded. Please contact your administrator.');
         }
 
         // Check circuit breaker
         $provider = $this->config['provider'];
-        if (!$this->costTracker->canUseProvider($provider)) {
+        if (! $this->costTracker->canUseProvider($provider)) {
             throw new Exception('AI service is temporarily unavailable. Please try again later.');
         }
 
@@ -261,7 +260,7 @@ class AgentService
         $messages = [];
 
         // Add system prompt
-        if (!empty($context['system_prompt'])) {
+        if (! empty($context['system_prompt'])) {
             $messages[] = [
                 'role' => 'system',
                 'content' => $context['system_prompt'],
@@ -278,7 +277,7 @@ class AgentService
 
         // Add context information as system message
         $contextInfo = $this->buildContextInfo($context);
-        if (!empty($contextInfo)) {
+        if (! empty($contextInfo)) {
             $messages[] = [
                 'role' => 'system',
                 'content' => $contextInfo,
@@ -302,18 +301,18 @@ class AgentService
         $parts = [];
 
         // Add task information
-        if (!empty($context['tasks']['recent_tasks'])) {
-            $parts[] = "Recent Tasks:\n" . json_encode($context['tasks']['recent_tasks'], JSON_PRETTY_PRINT);
+        if (! empty($context['tasks']['recent_tasks'])) {
+            $parts[] = "Recent Tasks:\n".json_encode($context['tasks']['recent_tasks'], JSON_PRETTY_PRINT);
         }
 
         // Add file information
-        if (!empty($context['files']['recent_files'])) {
-            $parts[] = "Recent Files:\n" . json_encode($context['files']['recent_files'], JSON_PRETTY_PRINT);
+        if (! empty($context['files']['recent_files'])) {
+            $parts[] = "Recent Files:\n".json_encode($context['files']['recent_files'], JSON_PRETTY_PRINT);
         }
 
         // Add project metadata
-        if (!empty($context['files']['project_meta'])) {
-            $parts[] = "Project Info:\n" . json_encode($context['files']['project_meta'], JSON_PRETTY_PRINT);
+        if (! empty($context['files']['project_meta'])) {
+            $parts[] = "Project Info:\n".json_encode($context['files']['project_meta'], JSON_PRETTY_PRINT);
         }
 
         return implode("\n\n", $parts);
@@ -324,7 +323,7 @@ class AgentService
      */
     private function executeOpenAIRequest(AgentRun $run, array $messages): array
     {
-        $provider = new OpenAIProvider();
+        $provider = new OpenAIProvider;
 
         Log::info('Executing OpenAI request', [
             'run_id' => $run->id,
@@ -339,13 +338,13 @@ class AgentService
         foreach ($provider->chatCompletion($run, $messages, true) as $chunk) {
             if ($chunk['type'] === 'token') {
                 // Stream token via WebSocket
-                $this->streamingService->streamToken($run->thread, $run, 'stream_' . $run->id, $chunk['content']);
+                $this->streamingService->streamToken($run->thread, $run, 'stream_'.$run->id, $chunk['content']);
                 $fullContent .= $chunk['content'];
             } elseif ($chunk['type'] === 'complete') {
                 $usage = $chunk['usage'];
 
                 // End stream
-                $this->streamingService->endStream($run->thread, $run, 'stream_' . $run->id, $fullContent);
+                $this->streamingService->endStream($run->thread, $run, 'stream_'.$run->id, $fullContent);
                 break;
             }
         }
@@ -365,7 +364,7 @@ class AgentService
      */
     private function executeAnthropicRequest(AgentRun $run, array $messages): array
     {
-        $provider = new AnthropicProvider();
+        $provider = new AnthropicProvider;
 
         Log::info('Executing Anthropic request', [
             'run_id' => $run->id,
@@ -380,13 +379,13 @@ class AgentService
         foreach ($provider->chatCompletion($run, $messages, true) as $chunk) {
             if ($chunk['type'] === 'token') {
                 // Stream token via WebSocket
-                $this->streamingService->streamToken($run->thread, $run, 'stream_' . $run->id, $chunk['content']);
+                $this->streamingService->streamToken($run->thread, $run, 'stream_'.$run->id, $chunk['content']);
                 $fullContent .= $chunk['content'];
             } elseif ($chunk['type'] === 'complete') {
                 $usage = $chunk['usage'];
 
                 // End stream
-                $this->streamingService->endStream($run->thread, $run, 'stream_' . $run->id, $fullContent);
+                $this->streamingService->endStream($run->thread, $run, 'stream_'.$run->id, $fullContent);
                 break;
             }
         }
@@ -440,7 +439,7 @@ class AgentService
         $model = $this->config['model'];
         $modelConfig = $this->config['models'][$model] ?? null;
 
-        if (!$modelConfig) {
+        if (! $modelConfig) {
             return $this->config['max_tokens'];
         }
 

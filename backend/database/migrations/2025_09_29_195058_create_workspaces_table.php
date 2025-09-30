@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('suspended_at')->nullable();
             $table->timestamps();
-            
+
             $table->index(['is_active', 'suspended_at']);
         });
     }

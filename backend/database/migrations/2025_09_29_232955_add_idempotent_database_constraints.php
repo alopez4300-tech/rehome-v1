@@ -39,12 +39,16 @@ return new class extends Migration
         if ($driver === 'mysql' || $driver === 'pgsql') {
             // Normalize FK to NULL ON DELETE (idempotent tries)
             Schema::table('users', function (Blueprint $table) {
-                try { $table->dropForeign(['current_workspace_id']); } catch (\Throwable $e) {}
+                try {
+                    $table->dropForeign(['current_workspace_id']);
+                } catch (\Throwable $e) {
+                }
                 try {
                     $table->foreign('current_workspace_id')
                         ->references('id')->on('workspaces')
                         ->nullOnDelete();
-                } catch (\Throwable $e) {}
+                } catch (\Throwable $e) {
+                }
             });
         } elseif ($driver === 'sqlite') {
             // Emulate ON DELETE SET NULL via trigger, idempotently
@@ -67,15 +71,15 @@ return new class extends Migration
 
         // ---- workspace_members unique (workspace_id, user_id)
         if ($driver === 'sqlite') {
-            DB::statement("
+            DB::statement('
                 CREATE UNIQUE INDEX IF NOT EXISTS workspace_members_workspace_user_unique
                 ON workspace_members(workspace_id, user_id)
-            ");
+            ');
         } elseif ($driver === 'pgsql') {
-            DB::statement("
+            DB::statement('
                 CREATE UNIQUE INDEX IF NOT EXISTS workspace_members_workspace_user_unique
                 ON workspace_members (workspace_id, user_id)
-            ");
+            ');
         } else { // mysql
             $exists = DB::table('information_schema.statistics')
                 ->where('table_schema', DB::raw('DATABASE()'))
@@ -83,10 +87,10 @@ return new class extends Migration
                 ->where('index_name', 'workspace_members_workspace_user_unique')
                 ->exists();
             if (! $exists) {
-                DB::statement("
+                DB::statement('
                     CREATE UNIQUE INDEX workspace_members_workspace_user_unique
                     ON workspace_members (workspace_id, user_id)
-                ");
+                ');
             }
         }
     }
@@ -104,10 +108,10 @@ return new class extends Migration
             ");
 
             if (empty($indexExists)) {
-                DB::statement("
+                DB::statement('
                     CREATE UNIQUE INDEX project_user_project_id_user_id_unique
                     ON project_user (project_id, user_id)
-                ");
+                ');
             }
         } else {
             // For MySQL/PostgreSQL use Schema builder with try/catch

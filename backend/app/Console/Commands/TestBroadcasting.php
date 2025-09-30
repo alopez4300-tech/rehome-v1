@@ -2,14 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\User;
-use App\Models\Workspace;
-use App\Models\Project;
-use App\Models\AgentThread;
-use App\Models\AgentMessage;
 use App\Events\Agent\AgentMessageCreated;
-use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Console\Command;
 
 class TestBroadcasting extends Command
 {
@@ -34,7 +28,7 @@ class TestBroadcasting extends Command
     {
         $threadId = $this->option('thread-id');
 
-        $this->info("Testing agent broadcasting system...");
+        $this->info('Testing agent broadcasting system...');
 
         // Create a test message
         $testMessage = (object) [
@@ -42,7 +36,7 @@ class TestBroadcasting extends Command
             'thread_id' => $threadId,
             'agent_thread_id' => $threadId,
             'role' => 'assistant',
-            'content' => 'This is a test message from the broadcasting system at ' . now(),
+            'content' => 'This is a test message from the broadcasting system at '.now(),
             'metadata' => [
                 'provider' => 'test',
                 'model' => 'test-model',
@@ -60,19 +54,19 @@ class TestBroadcasting extends Command
             $event = new AgentMessageCreated($testMessage);
             broadcast($event);
 
-            $this->info("✅ Event broadcast successfully!");
+            $this->info('✅ Event broadcast successfully!');
             $this->info("Channel: agent.thread.{$threadId}");
-            $this->info("Event: agent.message.created");
-            $this->info("Content: " . substr($testMessage->content, 0, 50) . "...");
+            $this->info('Event: agent.message.created');
+            $this->info('Content: '.substr($testMessage->content, 0, 50).'...');
 
         } catch (\Exception $e) {
-            $this->error("❌ Broadcasting failed: " . $e->getMessage());
-            $this->error("Stack trace: " . $e->getTraceAsString());
+            $this->error('❌ Broadcasting failed: '.$e->getMessage());
+            $this->error('Stack trace: '.$e->getTraceAsString());
         }
 
         $this->info("\n💡 To test client-side, open browser to:");
         $this->info("   http://localhost/admin/agent-threads/{$threadId}");
-        $this->info("   And check the browser console for WebSocket messages.");
+        $this->info('   And check the browser console for WebSocket messages.');
 
         return 0;
     }

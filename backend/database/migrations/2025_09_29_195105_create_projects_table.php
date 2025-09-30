@@ -25,7 +25,7 @@ return new class extends Migration
             $table->date('deadline')->nullable();
             $table->json('metadata')->nullable(); // Custom fields, tags, etc.
             $table->timestamps();
-            
+
             $table->unique(['workspace_id', 'slug']);
             $table->index(['workspace_id', 'status']);
             $table->index(['workspace_id', 'priority']);

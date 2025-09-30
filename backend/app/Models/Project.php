@@ -148,7 +148,7 @@ class Project extends Model
     {
         // This would be calculated based on tasks completion
         // For now, return a simple calculation based on dates
-        if (!$this->start_date || !$this->end_date) {
+        if (! $this->start_date || ! $this->end_date) {
             return 0;
         }
 

@@ -3,23 +3,19 @@
 namespace App\Filament\Resources\ProjectResource\Pages;
 
 use App\Filament\Resources\ProjectResource;
-use App\Models\AgentThread;
 use App\Models\AgentMessage;
-use App\Models\AgentRun;
+use App\Models\AgentThread;
 use App\Models\Project;
-use Filament\Resources\Pages\Page;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\View;
-use Filament\Forms\Form;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Illuminate\Contracts\View\View as ViewContract;
+use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 
@@ -142,7 +138,7 @@ class AgentPage extends Page implements HasForms
             ->get()
             ->toArray();
 
-        if (!empty($this->threads) && !$this->selectedThreadId) {
+        if (! empty($this->threads) && ! $this->selectedThreadId) {
             $this->selectedThreadId = $this->threads[0]['id'];
             $this->loadMessages();
         }
@@ -150,8 +146,9 @@ class AgentPage extends Page implements HasForms
 
     public function loadMessages(): void
     {
-        if (!$this->selectedThreadId) {
+        if (! $this->selectedThreadId) {
             $this->messages = [];
+
             return;
         }
 
@@ -177,12 +174,12 @@ class AgentPage extends Page implements HasForms
 
         try {
             // Create or get thread
-            if (!$this->selectedThreadId) {
+            if (! $this->selectedThreadId) {
                 $thread = AgentThread::create([
                     'project_id' => $this->record->id,
                     'user_id' => Auth::id(),
                     'audience' => 'admin',
-                    'title' => 'Admin Chat - ' . now()->format('M j, Y H:i'),
+                    'title' => 'Admin Chat - '.now()->format('M j, Y H:i'),
                 ]);
                 $this->selectedThreadId = $thread->id;
                 $this->loadThreads();
@@ -213,7 +210,7 @@ class AgentPage extends Page implements HasForms
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Error')
-                ->body('Failed to send message: ' . $e->getMessage())
+                ->body('Failed to send message: '.$e->getMessage())
                 ->danger()
                 ->send();
         } finally {
@@ -238,7 +235,7 @@ class AgentPage extends Page implements HasForms
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Error')
-                ->body('Failed to generate digest: ' . $e->getMessage())
+                ->body('Failed to generate digest: '.$e->getMessage())
                 ->danger()
                 ->send();
         }
@@ -259,7 +256,7 @@ class AgentPage extends Page implements HasForms
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Error')
-                ->body('Failed to analyze risks: ' . $e->getMessage())
+                ->body('Failed to analyze risks: '.$e->getMessage())
                 ->danger()
                 ->send();
         }

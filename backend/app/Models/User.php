@@ -15,7 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, HasRoles, HasRoleHelpers, Notifiable;
+    use HasApiTokens, HasFactory, HasRoleHelpers, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -120,8 +120,6 @@ class User extends Authenticatable
         return $this->projects()->wherePivot('role', 'manager');
     }
 
-
-
     /**
      * Check if user can access project.
      */
@@ -195,10 +193,10 @@ class User extends Authenticatable
     public function participantAgentThreads(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(AgentThread::class)
-                    ->where('audience', 'participant')
-                    ->whereHas('project.users', function ($query) {
-                        $query->where('users.id', $this->id);
-                    });
+            ->where('audience', 'participant')
+            ->whereHas('project.users', function ($query) {
+                $query->where('users.id', $this->id);
+            });
     }
 
     /**
@@ -207,10 +205,10 @@ class User extends Authenticatable
     public function adminAgentThreads(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(AgentThread::class)
-                    ->where('audience', 'admin')
-                    ->whereHas('project', function ($query) {
-                        $query->where('workspace_id', $this->workspace_id);
-                    });
+            ->where('audience', 'admin')
+            ->whereHas('project', function ($query) {
+                $query->where('workspace_id', $this->workspace_id);
+            });
     }
 
     /**

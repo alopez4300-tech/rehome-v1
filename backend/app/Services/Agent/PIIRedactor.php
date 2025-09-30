@@ -2,8 +2,8 @@
 
 namespace App\Services\Agent;
 
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * PII Redactor - Protects sensitive information in agent contexts
@@ -25,7 +25,7 @@ class PIIRedactor
      */
     public function redactContext(array $context, User $user): array
     {
-        if (!$this->config['enabled']) {
+        if (! $this->config['enabled']) {
             return $context;
         }
 
@@ -252,7 +252,7 @@ class PIIRedactor
     {
         $issues = [];
 
-        if (!is_array($this->config['patterns'])) {
+        if (! is_array($this->config['patterns'])) {
             $issues[] = 'PII patterns configuration is invalid';
         }
 

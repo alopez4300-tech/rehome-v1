@@ -18,7 +18,7 @@ return new class extends Migration
             $table->longText('content');
             $table->json('metadata')->nullable();
             $table->timestamps();
-            
+
             $table->index(['thread_id', 'created_at']);
             $table->index(['role', 'created_at']);
         });

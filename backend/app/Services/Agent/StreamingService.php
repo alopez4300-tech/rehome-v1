@@ -2,10 +2,10 @@
 
 namespace App\Services\Agent;
 
-use App\Models\AgentThread;
-use App\Models\AgentRun;
 use App\Events\Agent\AgentMessageCreated;
 use App\Events\Agent\ThreadTokenStreamed;
+use App\Models\AgentRun;
+use App\Models\AgentThread;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -78,7 +78,9 @@ class StreamingService
     ): void {
         // First writer wins; others bail (idempotent endStream)
         $flag = cache()->add("ai:done:{$streamId}", 1, now()->addMinutes(5));
-        if (! $flag) return;
+        if (! $flag) {
+            return;
+        }
 
         Log::info('Ending agent response stream', [
             'thread_id' => $thread->id,
@@ -179,7 +181,7 @@ class StreamingService
      */
     private function generateStreamId(AgentRun $run): string
     {
-        return 'stream_' . $run->id . '_' . uniqid();
+        return 'stream_'.$run->id.'_'.uniqid();
     }
 
     /**

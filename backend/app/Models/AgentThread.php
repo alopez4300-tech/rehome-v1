@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AgentThread extends Model
 {
@@ -16,12 +16,12 @@ class AgentThread extends Model
         'user_id',
         'audience',
         'title',
-        'metadata'
+        'metadata',
     ];
 
     protected $casts = [
         'metadata' => 'array',
-        'audience' => 'string'
+        'audience' => 'string',
     ];
 
     public function project(): BelongsTo
@@ -47,17 +47,17 @@ class AgentThread extends Model
     public function scopeForParticipant($query, User $user)
     {
         return $query->where('audience', 'participant')
-                    ->whereHas('project.users', function ($q) use ($user) {
-                        $q->where('users.id', $user->id);
-                    });
+            ->whereHas('project.users', function ($q) use ($user) {
+                $q->where('users.id', $user->id);
+            });
     }
 
     public function scopeForAdmin($query, User $user)
     {
         return $query->where('audience', 'admin')
-                    ->whereHas('project', function ($q) use ($user) {
-                        $q->where('workspace_id', $user->workspace_id);
-                    });
+            ->whereHas('project', function ($q) use ($user) {
+                $q->where('workspace_id', $user->workspace_id);
+            });
     }
 
     /**

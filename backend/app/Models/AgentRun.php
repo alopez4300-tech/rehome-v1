@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AgentRun extends Model
 {
@@ -21,7 +21,7 @@ class AgentRun extends Model
         'context_used',
         'started_at',
         'finished_at',
-        'error'
+        'error',
     ];
 
     protected $casts = [
@@ -30,7 +30,7 @@ class AgentRun extends Model
         'finished_at' => 'datetime',
         'tokens_in' => 'integer',
         'tokens_out' => 'integer',
-        'cost_cents' => 'integer'
+        'cost_cents' => 'integer',
     ];
 
     public function thread(): BelongsTo
@@ -67,7 +67,7 @@ class AgentRun extends Model
     {
         $this->update([
             'status' => 'running',
-            'started_at' => now()
+            'started_at' => now(),
         ]);
     }
 
@@ -75,7 +75,7 @@ class AgentRun extends Model
     {
         $this->update([
             'status' => 'completed',
-            'finished_at' => now()
+            'finished_at' => now(),
         ]);
     }
 
@@ -84,7 +84,7 @@ class AgentRun extends Model
         $this->update([
             'status' => 'failed',
             'finished_at' => now(),
-            'error' => $error
+            'error' => $error,
         ]);
     }
 }

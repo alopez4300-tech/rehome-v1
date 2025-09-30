@@ -2,11 +2,10 @@
 
 namespace App\Jobs\Agent;
 
-use App\Models\User;
-use App\Models\Project;
-use App\Models\Workspace;
 use App\Models\AgentMessage;
 use App\Models\AgentRun;
+use App\Models\Project;
+use App\Models\Workspace;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -26,7 +25,9 @@ class GenerateWeeklySummaryJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $timeout = 600; // 10 minutes
+
     public int $tries = 3;
+
     public string $queue = 'agent-processing';
 
     public function handle(): void
@@ -62,8 +63,8 @@ class GenerateWeeklySummaryJob implements ShouldQueue
         ]);
 
         $weeklyRuns = AgentRun::whereHas('agent_thread.project', function ($query) use ($workspace) {
-                $query->where('workspace_id', $workspace->id);
-            })
+            $query->where('workspace_id', $workspace->id);
+        })
             ->whereBetween('created_at', [$startDate, $endDate])
             ->with(['agent_thread.project', 'agent_messages'])
             ->get();
@@ -72,6 +73,7 @@ class GenerateWeeklySummaryJob implements ShouldQueue
             Log::info('No agent runs found for workspace in date range', [
                 'workspace_id' => $workspace->id,
             ]);
+
             return;
         }
 
@@ -106,20 +108,21 @@ class GenerateWeeklySummaryJob implements ShouldQueue
     private function calculateWeeklySummary($weeklyRuns, Workspace $workspace): array
     {
         $totalRuns = $weeklyRuns->count();
-        $totalMessages = $weeklyRuns->sum(fn($run) => $run->agent_messages->count());
-        $totalCostCents = $weeklyRuns->sum(fn($run) => $run->agent_messages->sum('cost_cents'));
-        $totalTokens = $weeklyRuns->sum(fn($run) => $run->agent_messages->sum('token_count'));
+        $totalMessages = $weeklyRuns->sum(fn ($run) => $run->agent_messages->count());
+        $totalCostCents = $weeklyRuns->sum(fn ($run) => $run->agent_messages->sum('cost_cents'));
+        $totalTokens = $weeklyRuns->sum(fn ($run) => $run->agent_messages->sum('token_count'));
 
         // Group by project
         $projectStats = $weeklyRuns->groupBy('agent_thread.project.id')
             ->map(function ($runs, $projectId) {
                 $project = $runs->first()->agent_thread->project;
+
                 return [
                     'project_name' => $project->name,
                     'runs' => $runs->count(),
-                    'messages' => $runs->sum(fn($run) => $run->agent_messages->count()),
-                    'cost_cents' => $runs->sum(fn($run) => $run->agent_messages->sum('cost_cents')),
-                    'tokens' => $runs->sum(fn($run) => $run->agent_messages->sum('token_count')),
+                    'messages' => $runs->sum(fn ($run) => $run->agent_messages->count()),
+                    'cost_cents' => $runs->sum(fn ($run) => $run->agent_messages->sum('cost_cents')),
+                    'tokens' => $runs->sum(fn ($run) => $run->agent_messages->sum('token_count')),
                 ];
             })
             ->sortByDesc('runs')
@@ -127,8 +130,8 @@ class GenerateWeeklySummaryJob implements ShouldQueue
             ->toArray();
 
         // Top AI providers used
-        $providerStats = $weeklyRuns->flatMap(fn($run) => $run->agent_messages)
-            ->groupBy(fn($message) => $message->metadata['provider'] ?? 'unknown')
+        $providerStats = $weeklyRuns->flatMap(fn ($run) => $run->agent_messages)
+            ->groupBy(fn ($message) => $message->metadata['provider'] ?? 'unknown')
             ->map(function ($messages, $provider) {
                 return [
                     'provider' => $provider,
@@ -168,7 +171,7 @@ class GenerateWeeklySummaryJob implements ShouldQueue
         $message .= "• \${$costDollars} total cost\n";
         $message .= "• {$summary['avg_messages_per_run']} avg messages per run\n\n";
 
-        if (!empty($summary['project_stats'])) {
+        if (! empty($summary['project_stats'])) {
             $message .= "**🎯 Top Projects:**\n";
             foreach (array_slice($summary['project_stats'], 0, 5) as $project) {
                 $projectCost = number_format($project['cost_cents'] / 100, 2);
@@ -177,7 +180,7 @@ class GenerateWeeklySummaryJob implements ShouldQueue
             $message .= "\n";
         }
 
-        if (!empty($summary['provider_stats'])) {
+        if (! empty($summary['provider_stats'])) {
             $message .= "**🤖 AI Provider Usage:**\n";
             foreach ($summary['provider_stats'] as $provider) {
                 $providerCost = number_format($provider['cost_cents'] / 100, 2);

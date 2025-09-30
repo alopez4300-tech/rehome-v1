@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\User;
 
 class EnsureWorkspaceContext
 {
@@ -17,31 +17,31 @@ class EnsureWorkspaceContext
      * Ensures that the authenticated user has proper workspace context
      * and shares workspace data with views.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
             /** @var User $user */
             $user = Auth::user();
-            
+
             // Ensure user has workspace
-            if (!$user->workspace_id) {
+            if (! $user->workspace_id) {
                 // If no workspace, could redirect to workspace selection
                 // For now, we'll use a default workspace (created in seeder)
                 $user->workspace_id = 1;
                 $user->save();
             }
-            
+
             // Load workspace relationship if not loaded
-            if (!$user->relationLoaded('workspace')) {
+            if (! $user->relationLoaded('workspace')) {
                 $user->load('workspace');
             }
-            
+
             // Share workspace context with all views
             if ($user->workspace) {
                 View::share('currentWorkspace', $user->workspace);
-                
+
                 // Set application context for scoped queries
                 app()->instance('current.workspace', $user->workspace);
             }

@@ -2,18 +2,18 @@
 
 namespace App\Jobs\Agent;
 
-use App\Models\Project;
-use App\Models\AgentThread;
 use App\Models\AgentMessage;
+use App\Models\AgentThread;
+use App\Models\Project;
 use App\Services\Agent\AgentService;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-use Exception;
 
 /**
  * Generate Daily Summary Job - Creates daily project digests
@@ -27,12 +27,14 @@ class GenerateDailySummaryJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public Project $project;
+
     public Carbon $date;
 
     /**
      * Job configuration
      */
     public int $timeout = 300; // 5 minutes max
+
     public int $tries = 2;
 
     /**
@@ -49,7 +51,7 @@ class GenerateDailySummaryJob implements ShouldQueue
             'summary',
             'daily',
             "workspace:{$project->workspace_id}",
-            "project:{$project->id}"
+            "project:{$project->id}",
         ]);
     }
 
@@ -75,11 +77,12 @@ class GenerateDailySummaryJob implements ShouldQueue
                 ->where('role', 'admin')
                 ->first();
 
-            if (!$systemUser) {
+            if (! $systemUser) {
                 Log::warning('No admin user found for workspace, skipping summary', [
                     'workspace_id' => $this->project->workspace_id,
-                    'project_id' => $this->project->id
+                    'project_id' => $this->project->id,
                 ]);
+
                 return;
             }
 
@@ -119,13 +122,13 @@ class GenerateDailySummaryJob implements ShouldQueue
             [
                 'project_id' => $this->project->id,
                 'audience' => 'admin',
-                'title' => 'Daily Project Summaries'
+                'title' => 'Daily Project Summaries',
             ],
             [
                 'created_by' => $this->project->workspace->users()
                     ->where('role', 'admin')
                     ->first()?->id,
-                'status' => 'active'
+                'status' => 'active',
             ]
         );
     }
@@ -178,9 +181,9 @@ Format as clean markdown with proper headings and bullet points.";
             ->count();
 
         // Count messages sent
-        $messagesSent = AgentMessage::whereHas('thread', function($query) {
-                $query->where('project_id', $this->project->id);
-            })
+        $messagesSent = AgentMessage::whereHas('thread', function ($query) {
+            $query->where('project_id', $this->project->id);
+        })
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
             ->where('role', 'user')
@@ -191,7 +194,7 @@ Format as clean markdown with proper headings and bullet points.";
 
         // Get active users
         $activeUsers = $this->project->users()
-            ->whereHas('actions', function($query) use ($start, $end) {
+            ->whereHas('actions', function ($query) use ($start, $end) {
                 $query->whereBetween('created_at', [$start, $end]);
             })
             ->count();
@@ -203,7 +206,7 @@ Format as clean markdown with proper headings and bullet points.";
             ->latest('updated_at')
             ->limit(5)
             ->get(['title', 'status', 'assigned_to'])
-            ->map(fn($task) => "- {$task->title} ({$task->status})")
+            ->map(fn ($task) => "- {$task->title} ({$task->status})")
             ->implode("\n");
 
         return [
@@ -211,7 +214,7 @@ Format as clean markdown with proper headings and bullet points.";
             'messages_sent' => $messagesSent,
             'files_uploaded' => $filesUploaded,
             'active_users' => $activeUsers,
-            'recent_tasks' => $recentTasks ?: 'No task updates today'
+            'recent_tasks' => $recentTasks ?: 'No task updates today',
         ];
     }
 
@@ -262,7 +265,7 @@ Format as clean markdown with proper headings and bullet points.";
             'daily',
             "workspace:{$this->project->workspace_id}",
             "project:{$this->project->id}",
-            "date:{$this->date->toDateString()}"
+            "date:{$this->date->toDateString()}",
         ];
     }
 }

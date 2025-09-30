@@ -3,10 +3,10 @@
 namespace App\Services\Agent\Providers;
 
 use App\Models\AgentRun;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Exception;
 use Generator;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * OpenAI Provider - Handles OpenAI API integration with streaming
@@ -17,7 +17,9 @@ use Generator;
 class OpenAIProvider
 {
     private string $apiKey;
+
     private string $baseUrl = 'https://api.openai.com/v1';
+
     private int $timeout;
 
     public function __construct()
@@ -25,7 +27,7 @@ class OpenAIProvider
         $this->apiKey = config('ai.api_keys.openai');
         $this->timeout = config('ai.timeout_seconds', 60);
 
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new Exception('OpenAI API key not configured');
         }
     }
@@ -52,7 +54,7 @@ class OpenAIProvider
             'run_id' => $run->id,
             'model' => $model,
             'message_count' => count($messages),
-            'stream' => $stream
+            'stream' => $stream,
         ]);
 
         try {
@@ -66,7 +68,7 @@ class OpenAIProvider
             Log::error('OpenAI API Error', [
                 'run_id' => $run->id,
                 'error' => $e->getMessage(),
-                'model' => $model
+                'model' => $model,
             ]);
             throw $e;
         }
@@ -81,10 +83,10 @@ class OpenAIProvider
             'Authorization' => "Bearer {$this->apiKey}",
             'Content-Type' => 'application/json',
         ])
-        ->timeout($this->timeout)
-        ->post("{$this->baseUrl}/chat/completions", $payload);
+            ->timeout($this->timeout)
+            ->post("{$this->baseUrl}/chat/completions", $payload);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new Exception("OpenAI API error: {$response->status()} - {$response->body()}");
         }
 
@@ -116,9 +118,10 @@ class OpenAIProvider
                                 'usage' => [
                                     'prompt_tokens' => $inputTokens,
                                     'completion_tokens' => $outputTokens,
-                                    'total_tokens' => $totalTokens
-                                ]
+                                    'total_tokens' => $totalTokens,
+                                ],
                             ];
+
                             return;
                         }
 
@@ -131,7 +134,7 @@ class OpenAIProvider
                                 yield [
                                     'type' => 'token',
                                     'content' => $token,
-                                    'done' => false
+                                    'done' => false,
                                 ];
                             }
 
@@ -159,10 +162,10 @@ class OpenAIProvider
             'Authorization' => "Bearer {$this->apiKey}",
             'Content-Type' => 'application/json',
         ])
-        ->timeout($this->timeout)
-        ->post("{$this->baseUrl}{$endpoint}", $payload);
+            ->timeout($this->timeout)
+            ->post("{$this->baseUrl}{$endpoint}", $payload);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new Exception("OpenAI API error: {$response->status()} - {$response->body()}");
         }
 
@@ -178,7 +181,7 @@ class OpenAIProvider
             'type' => 'complete',
             'content' => $response['choices'][0]['message']['content'] ?? '',
             'done' => true,
-            'usage' => $response['usage'] ?? []
+            'usage' => $response['usage'] ?? [],
         ];
     }
 
@@ -189,7 +192,7 @@ class OpenAIProvider
     {
         $costs = config("ai.costs.{$model}", [
             'input' => 0.15,
-            'output' => 0.60
+            'output' => 0.60,
         ]);
 
         // Convert from USD per 1M tokens to cents
@@ -206,6 +209,7 @@ class OpenAIProvider
     {
         // Rough approximation: 4 characters per token for most models
         $text = json_encode($messages);
+
         return (int) ceil(strlen($text) / 4);
     }
 
@@ -218,7 +222,7 @@ class OpenAIProvider
             'gpt-4o-mini',
             'gpt-4o',
             'gpt-4-turbo',
-            'gpt-3.5-turbo'
+            'gpt-3.5-turbo',
         ];
     }
 }

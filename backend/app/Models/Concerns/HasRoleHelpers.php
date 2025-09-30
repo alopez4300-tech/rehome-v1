@@ -2,8 +2,6 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
 trait HasRoleHelpers
 {
     /**
@@ -48,7 +46,7 @@ trait HasRoleHelpers
     public function getWorkspaceRole(?int $workspaceId = null): ?string
     {
         $wid = $workspaceId ?? $this->current_workspace_id;
-        if (!$wid) {
+        if (! $wid) {
             return null;
         }
 

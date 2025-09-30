@@ -1,10 +1,10 @@
 <?php
 
+use App\Jobs\Agent\GenerateDailySummaryJob;
+use App\Jobs\Agent\GenerateWeeklySummaryJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
-use App\Jobs\Agent\GenerateDailySummaryJob;
-use App\Jobs\Agent\GenerateWeeklySummaryJob;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());

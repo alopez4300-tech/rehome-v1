@@ -2,10 +2,8 @@
 
 namespace App\Services\Agent;
 
-use App\Models\Project;
 use App\Models\AgentThread;
-use App\Services\Agent\PIIRedactor;
-use Illuminate\Support\Collection;
+use App\Models\Project;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -17,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 class ContextBuilder
 {
     private PIIRedactor $piiRedactor;
+
     private array $config;
 
     public function __construct(PIIRedactor $piiRedactor)
@@ -85,13 +84,13 @@ class ContextBuilder
         $workspace = $project->workspace;
 
         $basePrompt = $isAdmin
-            ? "You are an AI assistant for workspace administrators with access to all workspace data."
+            ? 'You are an AI assistant for workspace administrators with access to all workspace data.'
             : "You are an AI assistant for project participants with access only to this project's data.";
 
         $contextPrompt = "
 Project: {$project->name}
 Workspace: {$workspace->name}
-Current Date: " . now()->format('Y-m-d H:i T') . "
+Current Date: ".now()->format('Y-m-d H:i T').'
 
 Guidelines:
 - Provide concise, actionable responses
@@ -99,13 +98,13 @@ Guidelines:
 - Highlight blockers and risks when relevant
 - Maintain professional tone
 - Respect data scoping based on user permissions
-";
+';
 
-        if (!$isAdmin) {
+        if (! $isAdmin) {
             $contextPrompt .= "\nIMPORTANT: You can only access data from the current project. Do not reference other projects or workspace-wide information.";
         }
 
-        return $basePrompt . "\n" . $contextPrompt;
+        return $basePrompt."\n".$contextPrompt;
     }
 
     /**

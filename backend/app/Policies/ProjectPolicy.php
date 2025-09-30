@@ -4,14 +4,13 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProjectPolicy
 {
     /**
      * Perform pre-authorization checks.
      */
-    public function before(User $user, string $ability): bool|null
+    public function before(User $user, string $ability): ?bool
     {
         // System admins can do everything
         if ($user->hasRole('system-admin')) {
@@ -65,6 +64,7 @@ class ProjectPolicy
 
         // Team members can update projects they're assigned to
         $membership = $project->members()->where('user_id', $user->id)->first();
+
         return $membership && in_array($membership->role, ['team', 'consultant']);
     }
 

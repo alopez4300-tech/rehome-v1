@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\BlogPostResource\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AgentCostWidget extends BaseWidget
 {

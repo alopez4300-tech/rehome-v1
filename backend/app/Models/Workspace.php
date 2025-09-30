@@ -80,7 +80,7 @@ class Workspace extends Model
      */
     public function isActive(): bool
     {
-        return $this->is_active && !$this->suspended_at;
+        return $this->is_active && ! $this->suspended_at;
     }
 
     /**

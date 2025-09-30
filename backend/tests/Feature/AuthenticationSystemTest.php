@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Project;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
@@ -22,7 +21,7 @@ class AuthenticationSystemTest extends TestCase
         foreach (['system-admin', 'team', 'consultant', 'client'] as $roleName) {
             \Spatie\Permission\Models\Role::firstOrCreate([
                 'name' => $roleName,
-                'guard_name' => 'web'
+                'guard_name' => 'web',
             ]);
         }
     }
@@ -49,7 +48,7 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $workspaceAdmin->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $this->assertFalse($workspaceAdmin->isSystemAdmin());
@@ -67,7 +66,7 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $workspaceOwner->id,
-            'role' => 'owner'
+            'role' => 'owner',
         ]);
 
         $this->assertFalse($workspaceOwner->isSystemAdmin());
@@ -85,7 +84,7 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $regularUser->id,
-            'role' => 'member'
+            'role' => 'member',
         ]);
 
         $this->assertFalse($regularUser->isSystemAdmin());
@@ -116,7 +115,7 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace1->id,
             'user_id' => $workspaceAdmin->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $this->assertTrue($workspaceAdmin->isWorkspaceAdmin($workspace1->id));
@@ -138,7 +137,7 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $workspaceAdmin->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         // Regular user
@@ -147,25 +146,25 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $regularUser->id,
-            'role' => 'member'
+            'role' => 'member',
         ]);
 
         // Test LoginResponse redirects
-        $loginResponse = new \App\Filament\Responses\LoginResponse();
+        $loginResponse = new \App\Filament\Responses\LoginResponse;
 
         // System admin should go to /admin
-        $request = new \Illuminate\Http\Request();
-        $request->setUserResolver(fn() => $systemAdmin);
+        $request = new \Illuminate\Http\Request;
+        $request->setUserResolver(fn () => $systemAdmin);
         $response = $loginResponse->toResponse($request);
         $this->assertEquals(url('/admin'), $response->getTargetUrl());
 
         // Workspace admin should go to /ops
-        $request->setUserResolver(fn() => $workspaceAdmin);
+        $request->setUserResolver(fn () => $workspaceAdmin);
         $response = $loginResponse->toResponse($request);
         $this->assertEquals(url('/ops'), $response->getTargetUrl());
 
         // Regular user should go to /app
-        $request->setUserResolver(fn() => $regularUser);
+        $request->setUserResolver(fn () => $regularUser);
         $response = $loginResponse->toResponse($request);
         $this->assertEquals(url('/app'), $response->getTargetUrl());
     }
@@ -180,7 +179,7 @@ class AuthenticationSystemTest extends TestCase
         $membership1 = WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $user->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $this->assertNotNull($membership1);
@@ -191,7 +190,7 @@ class AuthenticationSystemTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $workspace->id,
             'user_id' => $user->id,
-            'role' => 'owner'
+            'role' => 'owner',
         ]);
     }
 }

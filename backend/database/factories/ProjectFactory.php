@@ -14,9 +14,9 @@ class ProjectFactory extends Factory
     {
         return [
             'workspace_id' => Workspace::factory(),
-            'name'         => fake()->sentence(3),
-            'description'  => fake()->optional()->paragraph(),
-            'status'       => 'active',
+            'name' => fake()->sentence(3),
+            'description' => fake()->optional()->paragraph(),
+            'status' => 'active',
         ];
     }
 }

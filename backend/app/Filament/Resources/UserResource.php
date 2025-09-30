@@ -3,27 +3,24 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use App\Models\Workspace;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    
+
     protected static ?string $navigationGroup = 'User Management';
-    
+
     protected static ?int $navigationSort = 1;
 
     public static function getEloquentQuery(): Builder
@@ -55,7 +52,7 @@ class UserResource extends Resource
                             ->label('Password')
                             ->helperText('Leave blank to keep current password when editing'),
                     ])->columns(2),
-                    
+
                 Forms\Components\Section::make('Workspace & Role')
                     ->schema([
                         Forms\Components\Select::make('workspace_id')
@@ -70,14 +67,14 @@ class UserResource extends Resource
                             ->preload()
                             ->options([
                                 'workspace-admin' => 'Workspace Admin',
-                                'project-manager' => 'Project Manager', 
+                                'project-manager' => 'Project Manager',
                                 'team-member' => 'Team Member',
                                 'consultant' => 'Consultant',
                                 'client' => 'Client',
                             ])
                             ->helperText('Select one or more roles for this user'),
                     ])->columns(2),
-                    
+
                 Forms\Components\Section::make('Status & Activity')
                     ->schema([
                         Forms\Components\Toggle::make('is_active')
@@ -120,7 +117,7 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('email_verified_at')
                     ->label('Verified')
                     ->boolean()
-                    ->getStateUsing(fn ($record) => !is_null($record->email_verified_at))
+                    ->getStateUsing(fn ($record) => ! is_null($record->email_verified_at))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_active_at')
                     ->label('Last Active')

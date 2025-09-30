@@ -3,10 +3,10 @@
 namespace App\Filament\Widgets;
 
 use App\Models\AgentRun;
+use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class AgentCostWidget extends BaseWidget
 {
@@ -70,13 +70,13 @@ class AgentCostWidget extends BaseWidget
         $avgCostPerRun = $thisMonthRuns > 0 ? $thisMonthCost / $thisMonthRuns : 0;
 
         return [
-            Stat::make('This Month AI Costs', '$' . number_format($thisMonthCost, 2))
-                ->description($monthlyChange >= 0 ? '+' . number_format($monthlyChange, 1) . '% from last month' : number_format($monthlyChange, 1) . '% from last month')
+            Stat::make('This Month AI Costs', '$'.number_format($thisMonthCost, 2))
+                ->description($monthlyChange >= 0 ? '+'.number_format($monthlyChange, 1).'% from last month' : number_format($monthlyChange, 1).'% from last month')
                 ->descriptionIcon($monthlyChange >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($monthlyChange >= 0 ? 'warning' : 'success')
                 ->chart($this->getMonthlyCostChart()),
 
-            Stat::make('Last 30 Days', '$' . number_format($last30DaysCost, 2))
+            Stat::make('Last 30 Days', '$'.number_format($last30DaysCost, 2))
                 ->description('Total AI spend')
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('info'),
@@ -87,7 +87,7 @@ class AgentCostWidget extends BaseWidget
                 ->color('gray'),
 
             Stat::make('AI Runs', number_format($thisMonthRuns))
-                ->description('Avg: $' . number_format($avgCostPerRun, 3) . ' per run')
+                ->description('Avg: $'.number_format($avgCostPerRun, 3).' per run')
                 ->descriptionIcon('heroicon-m-play')
                 ->color('primary'),
         ];
@@ -112,9 +112,9 @@ class AgentCostWidget extends BaseWidget
             $monthlyCost = AgentRun::whereHas('thread.project', function ($query) use ($workspaceId) {
                 $query->where('workspace_id', $workspaceId);
             })
-            ->where('status', 'completed')
-            ->whereBetween('finished_at', [$startOfMonth, $endOfMonth])
-            ->sum('cost_cents');
+                ->where('status', 'completed')
+                ->whereBetween('finished_at', [$startOfMonth, $endOfMonth])
+                ->sum('cost_cents');
 
             $chartData[] = $monthlyCost / 100; // Convert to dollars
         }

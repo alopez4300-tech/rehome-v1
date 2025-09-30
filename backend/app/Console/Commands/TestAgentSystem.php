@@ -2,12 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Services\Agent\AgentService;
 use App\Services\Agent\ContextBuilder;
 use App\Services\Agent\CostTracker;
 use App\Services\Agent\PIIRedactor;
-use App\Services\Agent\AgentService;
-use App\Models\AgentThread;
-use App\Models\User;
 use Illuminate\Console\Command;
 
 /**
@@ -18,6 +16,7 @@ use Illuminate\Console\Command;
 class TestAgentSystem extends Command
 {
     protected $signature = 'agent:test {--component= : Test specific component (context|pii|cost|all)}';
+
     protected $description = 'Test the AI agent system components';
 
     public function handle()
@@ -60,8 +59,9 @@ class TestAgentSystem extends Command
 
         $config = config('ai');
 
-        if (!$config) {
+        if (! $config) {
             $this->error('❌ AI configuration not found');
+
             return;
         }
 
@@ -118,8 +118,8 @@ class TestAgentSystem extends Command
                 $this->info('✅ Token allocation calculation works (50/30/20 split)');
             } else {
                 $this->error('❌ Token allocation calculation failed');
-                $this->line('Expected: ' . json_encode($expected));
-                $this->line('Got: ' . json_encode($allocations));
+                $this->line('Expected: '.json_encode($expected));
+                $this->line('Got: '.json_encode($allocations));
             }
 
             // Test token estimation
@@ -134,7 +134,7 @@ class TestAgentSystem extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error("❌ ContextBuilder test failed: " . $e->getMessage());
+            $this->error('❌ ContextBuilder test failed: '.$e->getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ class TestAgentSystem extends Command
         $this->line('-------------------------');
 
         try {
-            $redactor = new PIIRedactor();
+            $redactor = new PIIRedactor;
             $this->info('✅ PIIRedactor instantiated');
 
             // Test configuration validation
@@ -171,7 +171,7 @@ class TestAgentSystem extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error("❌ PIIRedactor test failed: " . $e->getMessage());
+            $this->error('❌ PIIRedactor test failed: '.$e->getMessage());
         }
     }
 
@@ -181,7 +181,7 @@ class TestAgentSystem extends Command
         $this->line('-------------------------');
 
         try {
-            $costTracker = new CostTracker();
+            $costTracker = new CostTracker;
             $this->info('✅ CostTracker instantiated');
 
             // Test cost calculation
@@ -203,7 +203,7 @@ class TestAgentSystem extends Command
             }
 
         } catch (\Exception $e) {
-            $this->error("❌ CostTracker test failed: " . $e->getMessage());
+            $this->error('❌ CostTracker test failed: '.$e->getMessage());
         }
     }
 
@@ -230,7 +230,7 @@ class TestAgentSystem extends Command
             $this->info('✅ AgentService can be instantiated with dependencies');
 
         } catch (\Exception $e) {
-            $this->error("❌ Integration test failed: " . $e->getMessage());
+            $this->error('❌ Integration test failed: '.$e->getMessage());
         }
     }
 }

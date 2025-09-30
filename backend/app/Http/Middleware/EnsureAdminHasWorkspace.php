@@ -12,24 +12,24 @@ class EnsureAdminHasWorkspace
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
 
         // If user is not authenticated, let other middleware handle it
-        if (!$user) {
+        if (! $user) {
             return $next($request);
         }
 
         // If user has admin role but no workspace assigned
-        if ($user->hasRole('admin') && !$user->workspace_id) {
+        if ($user->hasRole('admin') && ! $user->workspace_id) {
             // For API requests, return JSON error
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
                     'error' => 'Admin user must be assigned to a workspace.',
-                    'code' => 'ADMIN_NO_WORKSPACE'
+                    'code' => 'ADMIN_NO_WORKSPACE',
                 ], 403);
             }
 

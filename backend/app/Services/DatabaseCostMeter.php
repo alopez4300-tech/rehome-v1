@@ -10,10 +10,10 @@ final class DatabaseCostMeter implements CostMeter
     {
         // TODO: Implement actual cost tracking
         // Log to database, send to analytics, etc.
-        \Log::info("Cost recorded", [
+        \Log::info('Cost recorded', [
             'run_id' => $runId,
             'cents' => $cents,
-            'meta' => $meta
+            'meta' => $meta,
         ]);
     }
 }

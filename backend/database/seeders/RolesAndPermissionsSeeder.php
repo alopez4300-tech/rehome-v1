@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -18,7 +17,7 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($roles as $roleName) {
             \Spatie\Permission\Models\Role::firstOrCreate([
                 'name' => $roleName,
-                'guard_name' => 'web'
+                'guard_name' => 'web',
             ]);
         }
 

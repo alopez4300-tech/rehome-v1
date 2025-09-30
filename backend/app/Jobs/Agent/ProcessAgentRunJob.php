@@ -5,13 +5,13 @@ namespace App\Jobs\Agent;
 use App\Models\AgentThread;
 use App\Models\User;
 use App\Services\Agent\AgentService;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 /**
  * Process Agent Run Job - Core job that handles AI agent message processing
@@ -24,14 +24,18 @@ class ProcessAgentRunJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public AgentThread $thread;
+
     public string $userMessage;
+
     public User $user;
 
     /**
      * Job configuration
      */
     public int $timeout = 120; // 2 minutes max execution
+
     public int $tries = 3;
+
     public int $maxExceptions = 3;
 
     /**
@@ -49,7 +53,7 @@ class ProcessAgentRunJob implements ShouldQueue
             'agent',
             "workspace:{$thread->project->workspace_id}",
             "project:{$thread->project_id}",
-            "thread:{$thread->id}"
+            "thread:{$thread->id}",
         ]);
     }
 
@@ -153,7 +157,7 @@ class ProcessAgentRunJob implements ShouldQueue
             "workspace:{$this->thread->project->workspace_id}",
             "project:{$this->thread->project_id}",
             "thread:{$this->thread->id}",
-            "user:{$this->user->id}"
+            "user:{$this->user->id}",
         ];
     }
 }

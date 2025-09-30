@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
-            
+
             $table->index(['project_id', 'audience']);
             $table->index(['user_id', 'created_at']);
         });

@@ -3,10 +3,10 @@
 namespace App\Services\Agent\Providers;
 
 use App\Models\AgentRun;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Exception;
 use Generator;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Anthropic Provider - Handles Anthropic Claude API integration with streaming
@@ -17,8 +17,11 @@ use Generator;
 class AnthropicProvider
 {
     private string $apiKey;
+
     private string $baseUrl = 'https://api.anthropic.com/v1';
+
     private int $timeout;
+
     private string $version = '2023-06-01';
 
     public function __construct()
@@ -26,7 +29,7 @@ class AnthropicProvider
         $this->apiKey = config('ai.api_keys.anthropic');
         $this->timeout = config('ai.timeout_seconds', 60);
 
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new Exception('Anthropic API key not configured');
         }
     }
@@ -60,7 +63,7 @@ class AnthropicProvider
             'run_id' => $run->id,
             'model' => $model,
             'message_count' => count($anthropicMessages['messages']),
-            'stream' => $stream
+            'stream' => $stream,
         ]);
 
         try {
@@ -74,7 +77,7 @@ class AnthropicProvider
             Log::error('Anthropic API Error', [
                 'run_id' => $run->id,
                 'error' => $e->getMessage(),
-                'model' => $model
+                'model' => $model,
             ]);
             throw $e;
         }
@@ -90,10 +93,10 @@ class AnthropicProvider
             'anthropic-version' => $this->version,
             'Content-Type' => 'application/json',
         ])
-        ->timeout($this->timeout)
-        ->post("{$this->baseUrl}/messages", $payload);
+            ->timeout($this->timeout)
+            ->post("{$this->baseUrl}/messages", $payload);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new Exception("Anthropic API error: {$response->status()} - {$response->body()}");
         }
 
@@ -126,7 +129,7 @@ class AnthropicProvider
                                     yield [
                                         'type' => 'token',
                                         'content' => $token,
-                                        'done' => false
+                                        'done' => false,
                                     ];
                                 }
                             } elseif ($json['type'] === 'message_delta') {
@@ -144,9 +147,10 @@ class AnthropicProvider
                                     'usage' => [
                                         'prompt_tokens' => $inputTokens,
                                         'completion_tokens' => $outputTokens,
-                                        'total_tokens' => $inputTokens + $outputTokens
-                                    ]
+                                        'total_tokens' => $inputTokens + $outputTokens,
+                                    ],
                                 ];
+
                                 return;
                             }
                         } catch (Exception $e) {
@@ -168,10 +172,10 @@ class AnthropicProvider
             'anthropic-version' => $this->version,
             'Content-Type' => 'application/json',
         ])
-        ->timeout($this->timeout)
-        ->post("{$this->baseUrl}{$endpoint}", $payload);
+            ->timeout($this->timeout)
+            ->post("{$this->baseUrl}{$endpoint}", $payload);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             throw new Exception("Anthropic API error: {$response->status()} - {$response->body()}");
         }
 
@@ -187,7 +191,7 @@ class AnthropicProvider
             'type' => 'complete',
             'content' => $response['content'][0]['text'] ?? '',
             'done' => true,
-            'usage' => $response['usage'] ?? []
+            'usage' => $response['usage'] ?? [],
         ];
     }
 
@@ -206,19 +210,19 @@ class AnthropicProvider
             } elseif ($message['role'] === 'assistant') {
                 $anthropicMessages[] = [
                     'role' => 'assistant',
-                    'content' => $message['content']
+                    'content' => $message['content'],
                 ];
             } elseif ($message['role'] === 'user') {
                 $anthropicMessages[] = [
                     'role' => 'user',
-                    'content' => $message['content']
+                    'content' => $message['content'],
                 ];
             }
         }
 
         return [
             'messages' => $anthropicMessages,
-            'system' => $systemMessage
+            'system' => $systemMessage,
         ];
     }
 
@@ -229,7 +233,7 @@ class AnthropicProvider
     {
         $costs = config("ai.costs.{$model}", [
             'input' => 1.00,
-            'output' => 5.00
+            'output' => 5.00,
         ]);
 
         // Convert from USD per 1M tokens to cents
@@ -246,6 +250,7 @@ class AnthropicProvider
     {
         // Rough approximation: 3.5 characters per token for Anthropic
         $text = json_encode($messages);
+
         return (int) ceil(strlen($text) / 3.5);
     }
 
@@ -258,7 +263,7 @@ class AnthropicProvider
             'claude-3-5-haiku-20241022',
             'claude-3-5-sonnet-20241022',
             'claude-3-haiku-20240307',
-            'claude-3-sonnet-20240229'
+            'claude-3-sonnet-20240229',
         ];
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->timestamp('last_active_at')->nullable();
             $table->json('preferences')->nullable();
-            
+
             $table->index(['workspace_id', 'is_active']);
             $table->index(['workspace_id', 'role']);
         });

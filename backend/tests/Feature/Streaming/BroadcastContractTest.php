@@ -2,13 +2,17 @@
 
 namespace Tests\Feature\Streaming;
 
-use Tests\TestCase;
+use App\Events\Agent\ThreadTokenStreamed;
+use App\Models\AgentRun;
+use App\Models\AgentThread;
+use App\Models\Project;
+use App\Models\User;
+use App\Models\Workspace;
+use App\Services\Agent\StreamingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use App\Events\Agent\ThreadTokenStreamed;
-use App\Services\Agent\StreamingService;
-use App\Models\{AgentRun, AgentThread, User, Project, Workspace};
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 /**
  * Focused Broadcast Contract Test
@@ -42,7 +46,7 @@ class BroadcastContractTest extends TestCase
         cache()->forget('ai:seq:s1');
 
         // Create the event directly to test its contract
-        $sequence = cache()->increment("ai:seq:s1");
+        $sequence = cache()->increment('ai:seq:s1');
         $event = new ThreadTokenStreamed($thread->id, [
             'token' => 'Hi',
             'done' => false,
@@ -156,7 +160,7 @@ class BroadcastContractTest extends TestCase
 
         $run = AgentRun::factory()->create(['thread_id' => $thread->id]);
 
-        $streamId = 'seq-test-' . uniqid();
+        $streamId = 'seq-test-'.uniqid();
         cache()->forget("ai:seq:{$streamId}");
 
         $service = app(StreamingService::class);

@@ -16,14 +16,14 @@ trait MultiTenantScoped
      */
     protected static function bootMultiTenantScoped(): void
     {
-        if (!feature('multi_tenant')) {
+        if (! feature('multi_tenant')) {
             return;
         }
 
         static::addGlobalScope('workspace', function (Builder $builder) {
             // Don't scope for system admins - they see all
             $user = Auth::user();
-            if (!$user || $user->isSystemAdmin()) {
+            if (! $user || $user->isSystemAdmin()) {
                 return;
             }
 
@@ -66,7 +66,7 @@ trait MultiTenantScoped
      */
     public function scopeInWorkspace(Builder $query, $workspaceId): Builder
     {
-        if (!feature('multi_tenant')) {
+        if (! feature('multi_tenant')) {
             return $query;
         }
 
@@ -86,7 +86,7 @@ trait MultiTenantScoped
      */
     public static function allWorkspaces()
     {
-        if (!Auth::user()?->isSystemAdmin()) {
+        if (! Auth::user()?->isSystemAdmin()) {
             throw new \Illuminate\Auth\Access\AuthorizationException('System admin access required');
         }
 

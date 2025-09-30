@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AgentMessage extends Model
 {
@@ -14,12 +14,12 @@ class AgentMessage extends Model
         'thread_id',
         'role',
         'content',
-        'metadata'
+        'metadata',
     ];
 
     protected $casts = [
         'metadata' => 'array',
-        'role' => 'string'
+        'role' => 'string',
     ];
 
     public function thread(): BelongsTo

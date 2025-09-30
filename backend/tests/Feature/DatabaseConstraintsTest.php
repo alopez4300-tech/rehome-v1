@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\Project;
 use App\Models\WorkspaceMember;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class DatabaseConstraintsTest extends TestCase
@@ -22,10 +22,12 @@ class DatabaseConstraintsTest extends TestCase
             \DB::statement('PRAGMA foreign_keys = ON;');
         }
 
-        foreach (['system-admin','team','consultant','client'] as $r) {
+        foreach (['system-admin', 'team', 'consultant', 'client'] as $r) {
             \Spatie\Permission\Models\Role::findOrCreate($r, 'web');
         }
-    }    public function test_user_current_workspace_nulls_on_workspace_delete(): void
+    }
+
+    public function test_user_current_workspace_nulls_on_workspace_delete(): void
     {
         $ws = Workspace::factory()->create();
         $user = User::factory()->create(['current_workspace_id' => $ws->id]);
@@ -75,7 +77,7 @@ class DatabaseConstraintsTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $ws->id,
             'user_id' => $user->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         // Second membership with same workspace_id and user_id should fail
@@ -84,7 +86,7 @@ class DatabaseConstraintsTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $ws->id,
             'user_id' => $user->id,
-            'role' => 'owner'
+            'role' => 'owner',
         ]);
     }
 
@@ -98,13 +100,13 @@ class DatabaseConstraintsTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $ws->id,
             'user_id' => $user1->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         WorkspaceMember::create([
             'workspace_id' => $ws->id,
             'user_id' => $user2->id,
-            'role' => 'member'
+            'role' => 'member',
         ]);
 
         // Force delete workspace should cascade delete members
@@ -174,7 +176,7 @@ class DatabaseConstraintsTest extends TestCase
             $member = WorkspaceMember::create([
                 'workspace_id' => $ws->id,
                 'user_id' => User::factory()->create()->id,
-                'role' => $role
+                'role' => $role,
             ]);
 
             $this->assertEquals($role, $member->role);
@@ -192,13 +194,13 @@ class DatabaseConstraintsTest extends TestCase
         WorkspaceMember::create([
             'workspace_id' => $ws1->id,
             'user_id' => $user->id,
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         WorkspaceMember::create([
             'workspace_id' => $ws2->id,
             'user_id' => $user->id,
-            'role' => 'member'
+            'role' => 'member',
         ]);
 
         $memberships = WorkspaceMember::where('user_id', $user->id)->get();

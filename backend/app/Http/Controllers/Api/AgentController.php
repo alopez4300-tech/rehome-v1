@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\AgentThread;
 use App\Models\AgentMessage;
 use App\Models\AgentRun;
-use Illuminate\Http\Request;
+use App\Models\AgentThread;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class AgentController extends Controller
 {
@@ -22,7 +21,7 @@ class AgentController extends Controller
         $this->authorizeThreadAccess($thread);
 
         return response()->json([
-            'data' => $thread->load(['messages', 'user', 'project'])
+            'data' => $thread->load(['messages', 'user', 'project']),
         ]);
     }
 
@@ -38,7 +37,7 @@ class AgentController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $messages
+            'data' => $messages,
         ]);
     }
 
@@ -51,7 +50,7 @@ class AgentController extends Controller
 
         $validated = $request->validate([
             'content' => 'required|string|max:10000',
-            'metadata' => 'sometimes|array'
+            'metadata' => 'sometimes|array',
         ]);
 
         // Create user message
@@ -71,7 +70,7 @@ class AgentController extends Controller
 
         return response()->json([
             'data' => $message,
-            'message' => 'Message sent successfully'
+            'message' => 'Message sent successfully',
         ], 201);
     }
 
@@ -84,7 +83,7 @@ class AgentController extends Controller
 
         return response()->stream(function () use ($thread) {
             // Set headers for SSE
-            echo "data: " . json_encode(['type' => 'connected', 'thread_id' => $thread->id]) . "\n\n";
+            echo 'data: '.json_encode(['type' => 'connected', 'thread_id' => $thread->id])."\n\n";
             ob_flush();
             flush();
 
@@ -97,7 +96,7 @@ class AgentController extends Controller
             // For now, just keep the connection alive
             while (true) {
                 sleep(1);
-                echo "data: " . json_encode(['type' => 'heartbeat', 'timestamp' => now()]) . "\n\n";
+                echo 'data: '.json_encode(['type' => 'heartbeat', 'timestamp' => now()])."\n\n";
                 ob_flush();
                 flush();
 
@@ -130,13 +129,13 @@ class AgentController extends Controller
             $run->update([
                 'status' => 'cancelled',
                 'finished_at' => now(),
-                'error' => 'Cancelled by user'
+                'error' => 'Cancelled by user',
             ]);
         }
 
         return response()->json([
             'message' => 'Agent runs cancelled successfully',
-            'cancelled_runs' => $activeRuns->count()
+            'cancelled_runs' => $activeRuns->count(),
         ]);
     }
 
@@ -154,7 +153,7 @@ class AgentController extends Controller
             }
         } else {
             // Participant threads: user must be assigned to the project
-            if (!$thread->project->users()->where('users.id', $user->id)->exists()) {
+            if (! $thread->project->users()->where('users.id', $user->id)->exists()) {
                 abort(403, 'Access denied to this thread');
             }
         }

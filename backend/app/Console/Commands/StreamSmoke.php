@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Models\AgentRun;
+use App\Models\AgentThread;
 use App\Services\Agent\StreamingService;
-use App\Models\{AgentThread, AgentRun};
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
 class StreamSmoke extends Command
@@ -40,7 +41,7 @@ class StreamSmoke extends Command
             $thread = AgentThread::findOrFail($threadId);
             $run = AgentRun::findOrFail($runId);
 
-            $this->info("🚀 Starting smoke stream:");
+            $this->info('🚀 Starting smoke stream:');
             $this->line("   Thread: {$thread->id} (Project: {$thread->project_id})");
             $this->line("   Run: {$run->id} (Status: {$run->status})");
             $this->line("   Stream ID: {$streamId}");
@@ -53,7 +54,7 @@ class StreamSmoke extends Command
             Cache::forget("ai:done:{$streamId}");
 
             // Start streaming character by character
-            $this->info("📡 Streaming tokens...");
+            $this->info('📡 Streaming tokens...');
             $progressBar = $this->output->createProgressBar(strlen($message));
             $progressBar->start();
 
@@ -70,7 +71,7 @@ class StreamSmoke extends Command
             $this->newLine();
 
             // End the stream
-            $this->info("✅ Ending stream with full response...");
+            $this->info('✅ Ending stream with full response...');
             $streamingService->endStream($thread, $run, $streamId, $message);
 
             // Verify cache state
@@ -78,26 +79,26 @@ class StreamSmoke extends Command
             $doneExists = Cache::has("ai:done:{$streamId}");
 
             $this->newLine();
-            $this->info("🔍 Post-stream verification:");
-            $this->line("   Sequence cache cleaned: " . ($sequenceExists ? '❌ NO' : '✅ YES'));
-            $this->line("   Done flag exists: " . ($doneExists ? '✅ YES' : '❌ NO'));
+            $this->info('🔍 Post-stream verification:');
+            $this->line('   Sequence cache cleaned: '.($sequenceExists ? '❌ NO' : '✅ YES'));
+            $this->line('   Done flag exists: '.($doneExists ? '✅ YES' : '❌ NO'));
 
             // Test idempotent behavior
-            $this->info("🔒 Testing idempotent endStream...");
+            $this->info('🔒 Testing idempotent endStream...');
             $result = $streamingService->endStream($thread, $run, $streamId, $message);
-            $this->line("   Second endStream call: " . ($result ? '❌ UNEXPECTED SUCCESS' : '✅ IDEMPOTENT'));
+            $this->line('   Second endStream call: '.($result ? '❌ UNEXPECTED SUCCESS' : '✅ IDEMPOTENT'));
 
             $this->newLine();
-            $this->info("🎉 Smoke stream completed successfully!");
-            $this->comment("💡 Check your client-side Echo listener for received tokens:");
+            $this->info('🎉 Smoke stream completed successfully!');
+            $this->comment('💡 Check your client-side Echo listener for received tokens:');
             $this->line("   Channel: agent.thread.{$thread->id}");
-            $this->line("   Event: agent.thread.token");
+            $this->line('   Event: agent.thread.token');
 
             return Command::SUCCESS;
 
         } catch (\Throwable $e) {
-            $this->error("🚨 Smoke stream failed: " . $e->getMessage());
-            $this->line("   File: " . $e->getFile() . ":" . $e->getLine());
+            $this->error('🚨 Smoke stream failed: '.$e->getMessage());
+            $this->line('   File: '.$e->getFile().':'.$e->getLine());
 
             if ($this->option('verbose')) {
                 $this->line($e->getTraceAsString());

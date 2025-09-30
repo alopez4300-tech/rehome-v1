@@ -2,12 +2,12 @@
 
 namespace App\Services\Agent;
 
+use App\Models\AgentRun;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\AgentRun;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 /**
  * Cost Tracker - Manages AI usage costs and budget enforcement
@@ -32,29 +32,32 @@ class CostTracker
         $rateLimits = $this->config['rate_limits'];
 
         // Check per-user per-minute limit
-        if (!$this->checkRateLimit($user->id, 'minute', $rateLimits['per_user_minute'])) {
+        if (! $this->checkRateLimit($user->id, 'minute', $rateLimits['per_user_minute'])) {
             Log::warning('User rate limit exceeded (per minute)', [
                 'user_id' => $user->id,
                 'limit' => $rateLimits['per_user_minute'],
             ]);
+
             return false;
         }
 
         // Check per-user per-day limit
-        if (!$this->checkRateLimit($user->id, 'day', $rateLimits['per_user_day'])) {
+        if (! $this->checkRateLimit($user->id, 'day', $rateLimits['per_user_day'])) {
             Log::warning('User rate limit exceeded (per day)', [
                 'user_id' => $user->id,
                 'limit' => $rateLimits['per_user_day'],
             ]);
+
             return false;
         }
 
         // Check per-workspace per-day limit
-        if (!$this->checkRateLimit("workspace:{$workspace->id}", 'day', $rateLimits['per_workspace_day'])) {
+        if (! $this->checkRateLimit("workspace:{$workspace->id}", 'day', $rateLimits['per_workspace_day'])) {
             Log::warning('Workspace rate limit exceeded (per day)', [
                 'workspace_id' => $workspace->id,
                 'limit' => $rateLimits['per_workspace_day'],
             ]);
+
             return false;
         }
 
@@ -115,8 +118,9 @@ class CostTracker
     {
         $costs = $this->config['costs'][$model] ?? null;
 
-        if (!$costs) {
+        if (! $costs) {
             Log::warning('Unknown model for cost calculation', ['model' => $model]);
+
             return 0;
         }
 
@@ -293,14 +297,14 @@ class CostTracker
      */
     private function getUserDailyUsage(User $user): int
     {
-        $cacheKey = "daily_usage:user:{$user->id}:" . now()->format('Y-m-d');
+        $cacheKey = "daily_usage:user:{$user->id}:".now()->format('Y-m-d');
 
         return Cache::remember($cacheKey, 3600, function () use ($user) {
             return AgentRun::whereHas('thread', function ($query) use ($user) {
                 $query->where('created_by', $user->id);
             })
-            ->whereDate('created_at', today())
-            ->sum('cost_cents') ?? 0;
+                ->whereDate('created_at', today())
+                ->sum('cost_cents') ?? 0;
         });
     }
 
@@ -309,15 +313,15 @@ class CostTracker
      */
     private function getWorkspaceMonthlyUsage(Workspace $workspace): int
     {
-        $cacheKey = "monthly_usage:workspace:{$workspace->id}:" . now()->format('Y-m');
+        $cacheKey = "monthly_usage:workspace:{$workspace->id}:".now()->format('Y-m');
 
         return Cache::remember($cacheKey, 3600, function () use ($workspace) {
             return AgentRun::whereHas('thread.project', function ($query) use ($workspace) {
                 $query->where('workspace_id', $workspace->id);
             })
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('cost_cents') ?? 0;
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->sum('cost_cents') ?? 0;
         });
     }
 
@@ -327,8 +331,8 @@ class CostTracker
     private function updateBudgetCache(AgentRun $run): void
     {
         // Invalidate cache entries to force recalculation
-        $userKey = "daily_usage:user:{$run->thread->created_by}:" . now()->format('Y-m-d');
-        $workspaceKey = "monthly_usage:workspace:{$run->thread->project->workspace_id}:" . now()->format('Y-m');
+        $userKey = "daily_usage:user:{$run->thread->created_by}:".now()->format('Y-m-d');
+        $workspaceKey = "monthly_usage:workspace:{$run->thread->project->workspace_id}:".now()->format('Y-m');
 
         Cache::forget($userKey);
         Cache::forget($workspaceKey);

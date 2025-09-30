@@ -4,14 +4,13 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Workspace;
-use Illuminate\Auth\Access\Response;
 
 class WorkspacePolicy
 {
     /**
      * Perform pre-authorization checks.
      */
-    public function before(User $user, string $ability): bool|null
+    public function before(User $user, string $ability): ?bool
     {
         // System admins can do everything
         if ($user->hasRole('system-admin')) {

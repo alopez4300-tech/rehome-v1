@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\AgentThread;
-use App\Models\User;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

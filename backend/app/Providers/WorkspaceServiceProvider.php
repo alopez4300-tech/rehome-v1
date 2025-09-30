@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Workspace;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
 
 class WorkspaceServiceProvider extends ServiceProvider
 {
@@ -18,6 +18,7 @@ class WorkspaceServiceProvider extends ServiceProvider
             if (Auth::check() && Auth::user()->workspace) {
                 return Auth::user()->workspace;
             }
+
             return null;
         });
     }

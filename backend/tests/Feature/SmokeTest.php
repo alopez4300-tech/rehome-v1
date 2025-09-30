@@ -88,7 +88,7 @@ class SmokeTest extends TestCase
     /** @test */
     public function multi_tenant_scoping_excludes_system_admins(): void
     {
-        if (!feature('multi_tenant')) {
+        if (! feature('multi_tenant')) {
             $this->markTestSkipped('Multi-tenant feature is disabled');
         }
 

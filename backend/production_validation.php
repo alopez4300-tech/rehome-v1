@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\AgentThread;
 use App\Models\AgentRun;
+use App\Models\AgentThread;
 use App\Services\Agent\StreamingService;
 use Illuminate\Support\Facades\Cache;
 
@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Cache;
  * - Broadcasting event structure
  * - Memory cleanup after completion
  */
-
 echo "🚀 ReHome v1 Streaming System Validation\n";
 echo "=======================================\n\n";
 
@@ -25,7 +24,7 @@ echo "=======================================\n\n";
 $streamingService = app(StreamingService::class);
 $thread = AgentThread::factory()->create();
 $run = AgentRun::factory()->create(['thread_id' => $thread->id]);
-$streamId = 'production-test-' . uniqid();
+$streamId = 'production-test-'.uniqid();
 
 echo "📋 Test Setup:\n";
 echo "   Thread ID: {$thread->id}\n";
@@ -47,29 +46,29 @@ $fullResponse = implode('', $tokens);
 
 // First endStream call (should succeed)
 $result1 = $streamingService->endStream($thread, $run, $streamId, $fullResponse);
-echo "   First endStream(): " . ($result1 ? 'SUCCESS' : 'FAILED') . "\n";
+echo '   First endStream(): '.($result1 ? 'SUCCESS' : 'FAILED')."\n";
 
 // Second endStream call (should be idempotent)
 $result2 = $streamingService->endStream($thread, $run, $streamId, $fullResponse);
-echo "   Second endStream(): " . ($result2 ? 'UNEXPECTED SUCCESS' : 'IDEMPOTENT (CORRECT)') . "\n";
+echo '   Second endStream(): '.($result2 ? 'UNEXPECTED SUCCESS' : 'IDEMPOTENT (CORRECT)')."\n";
 
 // 4. Verify cache cleanup
 echo "\n🧹 Testing Cache Cleanup:\n";
 $sequenceExists = Cache::has("ai:sequence:{$streamId}");
 $doneExists = Cache::has("ai:done:{$streamId}");
-echo "   Sequence cache cleaned: " . ($sequenceExists ? 'NO (ERROR)' : 'YES') . "\n";
-echo "   Done flag exists: " . ($doneExists ? 'YES' : 'NO (ERROR)') . "\n";
+echo '   Sequence cache cleaned: '.($sequenceExists ? 'NO (ERROR)' : 'YES')."\n";
+echo '   Done flag exists: '.($doneExists ? 'YES' : 'NO (ERROR)')."\n";
 
 // 5. Test concurrent streaming simulation
 echo "\n⚡ Testing Concurrent Operations:\n";
-$concurrentStreamId = 'concurrent-test-' . uniqid();
+$concurrentStreamId = 'concurrent-test-'.uniqid();
 $concurrentTokens = ['Fast', 'concurrent', 'tokens'];
 
 foreach ($concurrentTokens as $token) {
     // Simulate concurrent access
     $seq1 = Cache::increment("ai:sequence:{$concurrentStreamId}");
     $seq2 = Cache::get("ai:sequence:{$concurrentStreamId}");
-    echo "   Atomic increment: {$seq1} === {$seq2} → " . ($seq1 === $seq2 ? 'ATOMIC' : 'RACE CONDITION') . "\n";
+    echo "   Atomic increment: {$seq1} === {$seq2} → ".($seq1 === $seq2 ? 'ATOMIC' : 'RACE CONDITION')."\n";
 }
 
 // 6. Validate broadcasting structure
@@ -81,23 +80,23 @@ $event = new \App\Events\ThreadTokenStreamed($thread->id, [
     'done' => false,
 ]);
 
-echo "   Channel: " . $event->broadcastOn()[0]->name . "\n";
-echo "   Event name: " . $event->broadcastAs() . "\n";
-echo "   Implements ShouldBroadcastNow: " . ($event instanceof \Illuminate\Contracts\Broadcasting\ShouldBroadcastNow ? 'YES' : 'NO') . "\n";
+echo '   Channel: '.$event->broadcastOn()[0]->name."\n";
+echo '   Event name: '.$event->broadcastAs()."\n";
+echo '   Implements ShouldBroadcastNow: '.($event instanceof \Illuminate\Contracts\Broadcasting\ShouldBroadcastNow ? 'YES' : 'NO')."\n";
 
 $payload = $event->broadcastWith();
 $requiredKeys = ['token', 'sequence', 'stream_id', 'done'];
 $hasAllKeys = array_diff($requiredKeys, array_keys($payload)) === [];
-echo "   Payload structure: " . ($hasAllKeys ? 'VALID' : 'MISSING KEYS') . "\n";
+echo '   Payload structure: '.($hasAllKeys ? 'VALID' : 'MISSING KEYS')."\n";
 
 // 7. Performance metrics
 echo "\n⚡ Performance Metrics:\n";
 $start = microtime(true);
 for ($i = 0; $i < 100; $i++) {
-    Cache::increment("perf-test");
+    Cache::increment('perf-test');
 }
 $cacheTime = microtime(true) - $start;
-echo "   100 cache operations: " . round($cacheTime * 1000, 2) . "ms\n";
+echo '   100 cache operations: '.round($cacheTime * 1000, 2)."ms\n";
 
 $start = microtime(true);
 for ($i = 0; $i < 10; $i++) {
@@ -109,13 +108,13 @@ for ($i = 0; $i < 10; $i++) {
     ]);
 }
 $eventTime = microtime(true) - $start;
-echo "   10 event creations: " . round($eventTime * 1000, 2) . "ms\n";
+echo '   10 event creations: '.round($eventTime * 1000, 2)."ms\n";
 
 // 8. Memory cleanup
 echo "\n🧹 Cleaning up test data:\n";
 Cache::forget("ai:done:{$streamId}");
 Cache::forget("ai:sequence:{$concurrentStreamId}");
-Cache::forget("perf-test");
+Cache::forget('perf-test');
 $thread->delete();
 $run->delete();
 echo "   Test data cleaned up ✅\n";
