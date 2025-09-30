@@ -50,6 +50,41 @@ make validate-db validate-agents
 - **API Endpoints**: http://localhost:8000/api
 - **Queue Dashboard (Horizon)**: http://localhost:8000/horizon
 
+## 💡 Light Profile - Build & Run
+
+ReHome starts in **Light Profile** by default - optimized for development and small teams with minimal dependencies.
+
+### Light Profile Features
+
+- **🗃️ SQLite Database** - No PostgreSQL required
+- **📁 File-based Cache & Sessions** - No Redis required
+- **⚡ Synchronous Queues** - No background workers needed
+- **📧 Log-based Email** - No SMTP configuration needed
+- **🔄 File-based Broadcasting** - No WebSocket server needed
+
+### Quick Light Setup
+
+```bash
+# Use Light profile (default)
+cp backend/.env.light.example backend/.env
+php artisan key:generate
+php artisan migrate --seed
+
+# Start development server
+php artisan serve &
+cd frontend && npm run dev
+```
+
+### Switch to Scale Profile Later
+
+When you're ready for production features (Redis, WebSockets, PostgreSQL):
+
+```bash
+make scale  # Switches to full-scale configuration
+```
+
+The **Light → Scale** transition is designed to be seamless - one command switches all drivers and enables advanced features.
+
 ### Essential Commands
 
 ```bash

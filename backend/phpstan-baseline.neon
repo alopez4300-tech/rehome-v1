@@ -1,0 +1,409 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method App\\Models\\User\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/AppFirstRun.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Workspace\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/AppFirstRun.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\WorkspaceMember\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/AppFirstRun.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Role\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/AppFirstRun.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\User\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/AuthDiag.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\WorkspaceMember\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Console/Commands/AuthDiag.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentRun\:\:findOrFail\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/StreamSmoke.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:findOrFail\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/StreamSmoke.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Project\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/VerifyPolicies.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\User\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/Console/Commands/VerifyPolicies.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\User\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/VerifyPolicies.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Workspace\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Console/Commands/VerifyPolicies.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Workspace\:\:whereIn\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Console/Commands/VerifyPolicies.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Resources\\ProjectResource\\Pages\\AgentPage\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/ProjectResource/Pages/AgentPage.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Resources/ProjectResource/Pages/AgentPage.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Resources/ProjectResource/Pages/AgentPage.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Resources/ProjectResource/Pages/AgentPage.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:forAdmin\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Filament/Resources/ProjectResource/Pages/AgentPage.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentRun\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Filament/Widgets/AgentCostWidget.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentRun\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AgentController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/ProjectAgentController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/ProjectAgentController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Jobs/Agent/GenerateDailySummaryJob.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Jobs/Agent/GenerateDailySummaryJob.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Jobs/Agent/GenerateDailySummaryJob.php
+
+		-
+			message: '#^Method App\\Jobs\\Agent\\GenerateDailySummaryJob\:\:tags\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Jobs/Agent/GenerateDailySummaryJob.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Jobs/Agent/GenerateWeeklySummaryJob.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentRun\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Jobs/Agent/GenerateWeeklySummaryJob.php
+
+		-
+			message: '#^Method App\\Jobs\\Agent\\ProcessAgentRunJob\:\:tags\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Jobs/Agent/ProcessAgentRunJob.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\AgentThread\:\:\$project\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/AgentThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\File\:\:\$has_thumbnail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/File.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\File\:\:\$mime_type\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Models/File.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\File\:\:\$uuid\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/File.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Project\:\:\$deadline\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Project\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Project\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Project\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/Project.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Project\:\:withoutGlobalScope\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ProjectMember\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Models/ProjectMember.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$current_workspace_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Models/User.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$workspace_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/User.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Workspace\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Workspace.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Workspace\:\:\$suspended_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Workspace.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Workspace\:\:\$trial_ends_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Workspace.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\WorkspaceMember\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Models/WorkspaceMember.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentMessage\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/Services/Agent/AgentService.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentRun\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Services/Agent/AgentService.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Services/Agent/AgentService.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentRun\:\:whereHas\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Services/Agent/CostTracker.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Facades\\Cache\:\:expire\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Services/Agent/CostTracker.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Role\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: database/seeders/RoleSeeder.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Role\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: database/seeders/RolesAndPermissionsSeeder.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Role\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: database/seeders/RolesAndPermissionsSeeder.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Project\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: database/seeders/WorkspaceSeeder.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\User\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 4
+			path: database/seeders/WorkspaceSeeder.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Workspace\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: database/seeders/WorkspaceSeeder.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Permission\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: database/seeders/WorkspaceSeeder.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Role\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 5
+			path: database/seeders/WorkspaceSeeder.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\AgentThread\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: routes/channels.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Project\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: routes/channels.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\WorkspaceMember\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 8
+			path: tests/Feature/AuthenticationSystemTest.php
+
+		-
+			message: '#^Call to an undefined static method Spatie\\Permission\\Models\\Role\:\:firstOrCreate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/Feature/AuthenticationSystemTest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Project\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/Feature/DatabaseConstraintsTest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\WorkspaceMember\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 7
+			path: tests/Feature/DatabaseConstraintsTest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\WorkspaceMember\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/Feature/DatabaseConstraintsTest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Project\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/Feature/SmokeTest.php
