@@ -57,6 +57,7 @@ class AdminadminPanelProvider extends PanelProvider
                 'role:system-admin',
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->renderHook('panels::scripts.before', fn () => View::make('filament.hooks.echo-init'));
+            ->renderHook('panels::scripts.before', fn () => View::make('filament.hooks.echo-init'))
+            ->renderHook('panels::topbar.end', fn () => View::make('filament.components.profile-badge'));
     }
 }

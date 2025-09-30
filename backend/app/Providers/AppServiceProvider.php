@@ -15,6 +15,15 @@ class AppServiceProvider extends ServiceProvider
     {
         // Bind custom Filament login response for smart redirects
         $this->app->bind(FilamentLoginResponse::class, AppLoginResponse::class);
+
+        // Gate heavy providers - only load in scale profile
+        $scale = env('APP_PROFILE', 'light') === 'scale';
+        if ($scale) {
+            // Register heavy stuff when needed:
+            // $this->app->register(\Laravel\Horizon\HorizonServiceProvider::class);
+            // $this->app->register(\App\Providers\RealtimeServiceProvider::class);
+            // $this->app->register(\App\Providers\AnalyticsServiceProvider::class);
+        }
     }
 
     /**

@@ -21,8 +21,14 @@ trait MultiTenantScoped
         }
 
         static::addGlobalScope('workspace', function (Builder $builder) {
+            // Don't scope for system admins - they see all
+            $user = Auth::user();
+            if (!$user || $user->isSystemAdmin()) {
+                return;
+            }
+
             $workspaceId = self::getCurrentWorkspaceId();
-            
+
             if ($workspaceId !== null) {
                 $builder->where('workspace_id', $workspaceId);
             }

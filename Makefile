@@ -30,6 +30,7 @@ light: ## Switch to light-weight profile (minimal overhead)
 	@echo "💡 Switching to light profile..."
 	@if [ -f backend/.env.light.example ]; then \
 		cp backend/.env.light.example backend/.env; \
+		$(ART) optimize:clear; \
 		echo "✅ Switched to light profile (sqlite, sync queues, file cache)"; \
 		echo "📋 Profile: $(shell cd backend && php artisan tinker --execute="echo config('feature.profile');" 2>/dev/null || echo 'light')"; \
 	else \
@@ -40,6 +41,7 @@ scale: ## Switch to scale profile (production features)
 	@echo "🚀 Switching to scale profile..."
 	@if [ -f backend/.env.scale.example ]; then \
 		cp backend/.env.scale.example backend/.env; \
+		$(ART) optimize:clear; \
 		echo "✅ Switched to scale profile (mysql/redis, async queues, redis cache)"; \
 		echo "📋 Profile: $(shell cd backend && php artisan tinker --execute="echo config('feature.profile');" 2>/dev/null || echo 'scale')"; \
 		echo "⚠️  Don't forget to update DB credentials and Redis settings"; \

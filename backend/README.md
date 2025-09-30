@@ -14,11 +14,13 @@ A multi-tenant project management platform built with Laravel 11, featuring a 3-
 ## 🏗️ Architecture Overview
 
 ### 3-Surface Architecture
+
 - **System Admin** (`/admin`) - Global system administration (Filament)
-- **Workspace Admin** (`/ops`) - Workspace-scoped operations (Filament) 
+- **Workspace Admin** (`/ops`) - Workspace-scoped operations (Filament)
 - **App SPA** (`/app`) - Project-focused user interface (React/Vue)
 
 ### Authentication System
+
 - **Laravel Sanctum** SPA authentication with smart redirects
 - **Spatie Laravel Permission** for role-based access control
 - **Multi-workspace support** with flexible user memberships
@@ -29,12 +31,15 @@ A multi-tenant project management platform built with Laravel 11, featuring a 3-
 The application supports two operational profiles via the `APP_PROFILE` environment variable:
 
 ### Light Profile (Default)
+
 Minimal overhead configuration perfect for development and small deployments:
+
 ```bash
 make light  # Switch to light profile
 ```
 
 **Configuration:**
+
 - **Database:** SQLite (single file)
 - **Queue:** Sync (immediate processing)
 - **Cache:** File-based
@@ -43,13 +48,16 @@ make light  # Switch to light profile
 
 **Use Cases:** Development, small teams, proof-of-concept deployments
 
-### Scale Profile  
+### Scale Profile
+
 Production-optimized configuration with full feature set:
+
 ```bash
 make scale  # Switch to scale profile
 ```
 
 **Configuration:**
+
 - **Database:** MySQL/PostgreSQL with connection pooling
 - **Queue:** Redis-backed async processing
 - **Cache:** Redis with distributed caching
@@ -79,12 +87,12 @@ if (profile('scale')) {
 
 ### Available Feature Flags
 
-| Feature | Light | Scale | Description |
-|---------|-------|-------|-------------|
+| Feature                 | Light   | Scale  | Description                         |
+| ----------------------- | ------- | ------ | ----------------------------------- |
 | `FEATURE_COST_TRACKING` | `false` | `true` | Project cost analysis and budgeting |
-| `FEATURE_REALTIME` | `false` | `true` | Real-time updates and notifications |
-| `FEATURE_MULTI_TENANT` | `true` | `true` | Workspace isolation and scoping |
-| `FEATURE_CLIENT_PORTAL` | `false` | `true` | External client access portal |
+| `FEATURE_REALTIME`      | `false` | `true` | Real-time updates and notifications |
+| `FEATURE_MULTI_TENANT`  | `true`  | `true` | Workspace isolation and scoping     |
+| `FEATURE_CLIENT_PORTAL` | `false` | `true` | External client access portal       |
 
 ### Zero-Overhead Design
 

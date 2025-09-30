@@ -16,6 +16,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\View;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class OpsPanelProvider extends PanelProvider
@@ -54,6 +55,7 @@ class OpsPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 'ops.admin',
-            ]);
+            ])
+            ->renderHook('panels::topbar.end', fn () => View::make('filament.components.profile-badge'));
     }
 }
