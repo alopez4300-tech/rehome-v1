@@ -2,6 +2,7 @@
 
 > **AI Assistant Quick Start**: This repo is **editor-agnostic** and ready for AI assistants (Cursor, VS AI, Windsurf). Run `make health-check` to validate your environment.
 
+[![CI](https://github.com/alopez4300-tech/rehome-v1/actions/workflows/ci.yml/badge.svg)](https://github.com/alopez4300-tech/rehome-v1/actions/workflows/ci.yml)
 [![Development Status](https://img.shields.io/badge/status-active%20development-green)](https://github.com/alopez4300-tech/rehome-v1)
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-red)](https://laravel.com)
 [![Filament](https://img.shields.io/badge/Filament-v3-orange)](https://filamentphp.com)

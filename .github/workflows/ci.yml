@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: ["**"]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   fast-gate:
     runs-on: ubuntu-latest
@@ -50,7 +54,9 @@ jobs:
       - name: Cache composer dependencies
         uses: actions/cache@v4
         with:
-          path: backend/vendor
+          path: |
+            backend/vendor
+            ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
@@ -64,7 +70,9 @@ jobs:
       - name: Backend setup
         run: |
           cd backend
+          composer validate --strict
           composer install --no-progress --prefer-dist --no-dev
+          composer audit --no-interaction || true
           cp .env.ci .env
           php -v
           php artisan --version
