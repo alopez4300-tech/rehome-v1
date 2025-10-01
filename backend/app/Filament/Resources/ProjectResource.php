@@ -18,7 +18,7 @@ class ProjectResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-folder';
 
-    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 2;
 

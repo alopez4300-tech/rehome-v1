@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\AdminAudit;
 
 class UserResource extends Resource
 {
@@ -19,7 +20,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 1;
 
@@ -151,8 +152,14 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function ($record, $data) {
+                        AdminAudit::log('user_updated', 'User', $record->id, $record->getOriginal(), $record->getChanges());
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function ($record) {
+                        AdminAudit::log('user_deleted', 'User', $record->id, $record->toArray());
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

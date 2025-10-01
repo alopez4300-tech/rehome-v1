@@ -21,6 +21,9 @@ class RecentTasksTable extends Widget
                 Tables\Columns\TextColumn::make('project.name')->label('Project'),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->label('Updated'),
             ])
-            ->paginated(false);
+            ->paginated(false)
+            ->emptyStateHeading('No tasks yet')
+            ->emptyStateDescription('Tasks will appear here once they are created.')
+            ->emptyStateIcon('heroicon-o-rectangle-stack');
     }
 }

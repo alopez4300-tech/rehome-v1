@@ -21,6 +21,9 @@ class RecentUsersTable extends Widget
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Joined'),
             ])
-            ->paginated(false);
+            ->paginated(false)
+            ->emptyStateHeading('No users yet')
+            ->emptyStateDescription('Users will appear here once they register.')
+            ->emptyStateIcon('heroicon-o-users');
     }
 }

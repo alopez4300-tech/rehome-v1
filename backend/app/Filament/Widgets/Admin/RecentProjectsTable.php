@@ -21,6 +21,9 @@ class RecentProjectsTable extends Widget
                 Tables\Columns\TextColumn::make('workspace.name')->label('Workspace'),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->label('Updated'),
             ])
-            ->paginated(false);
+            ->paginated(false)
+            ->emptyStateHeading('No projects yet')
+            ->emptyStateDescription('Projects will appear here once they are created.')
+            ->emptyStateIcon('heroicon-o-folder');
     }
 }
