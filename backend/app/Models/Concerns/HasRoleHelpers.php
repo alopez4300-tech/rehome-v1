@@ -5,11 +5,11 @@ namespace App\Models\Concerns;
 trait HasRoleHelpers
 {
     /**
-     * Check if user has the system-admin role (global access)
+     * Check if user has the admin role (global access)
      */
     public function isSystemAdmin(): bool
     {
-        return $this->hasRole('system-admin');
+        return $this->hasRole('admin');
     }
 
     /**

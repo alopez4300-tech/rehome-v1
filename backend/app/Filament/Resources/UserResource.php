@@ -66,9 +66,8 @@ class UserResource extends Resource
                             ->multiple()
                             ->preload()
                             ->options([
-                                'workspace-admin' => 'Workspace Admin',
-                                'project-manager' => 'Project Manager',
-                                'team-member' => 'Team Member',
+                                'admin' => 'Admin',
+                                'team' => 'Team',
                                 'consultant' => 'Consultant',
                                 'client' => 'Client',
                             ])

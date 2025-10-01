@@ -12,7 +12,7 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         // Create roles if they don't exist
-        $roles = ['system-admin', 'team', 'consultant', 'client'];
+        $roles = ['admin', 'team', 'consultant', 'client'];
 
         foreach ($roles as $roleName) {
             \Spatie\Permission\Models\Role::firstOrCreate([
@@ -21,17 +21,17 @@ class RolesAndPermissionsSeeder extends Seeder
             ]);
         }
 
-        // Clean up old 'admin' role if it exists to avoid confusion
-        $oldAdminRole = \Spatie\Permission\Models\Role::where('name', 'admin')->first();
-        if ($oldAdminRole) {
-            // Transfer any users with 'admin' role to 'system-admin'
-            $adminUsers = $oldAdminRole->users;
+        // Clean up old 'system-admin' role if it exists to avoid confusion
+        $oldSystemAdminRole = \Spatie\Permission\Models\Role::where('name', 'system-admin')->first();
+        if ($oldSystemAdminRole) {
+            // Transfer any users with 'system-admin' role to 'admin'
+            $adminUsers = $oldSystemAdminRole->users;
             foreach ($adminUsers as $user) {
-                $user->assignRole('system-admin');
-                $user->removeRole('admin');
+                $user->assignRole('admin');
+                $user->removeRole('system-admin');
             }
-            $oldAdminRole->delete();
-            $this->command->info('Migrated admin users to system-admin role');
+            $oldSystemAdminRole->delete();
+            $this->command->info('Migrated system-admin users to admin role');
         }
 
         $this->command->info('Roles created successfully!');

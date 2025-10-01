@@ -30,7 +30,7 @@ class AppFirstRun extends Command
     public function handle(): int
     {
         // Ensure roles exist
-        foreach (['system-admin', 'team', 'consultant', 'client'] as $roleName) {
+        foreach (['admin', 'team', 'consultant', 'client'] as $roleName) {
             \Spatie\Permission\Models\Role::firstOrCreate([
                 'name' => $roleName,
                 'guard_name' => 'web',
@@ -46,7 +46,7 @@ class AppFirstRun extends Command
             ]
         );
 
-        $user->syncRoles(['system-admin']);
+        $user->syncRoles(['admin']);
 
         // Create or fetch workspace
         $workspace = \App\Models\Workspace::firstOrCreate([
@@ -72,9 +72,9 @@ class AppFirstRun extends Command
 
         $this->info('✅ First run complete:');
         $this->info("- User: {$user->email}");
-        $this->info('- Role: system-admin');
+        $this->info('- Role: admin');
         $this->info("- Workspace: {$workspace->name} (owner)");
-        $this->info('You can now visit /admin (System Admin) or /ops (Workspace Admin).');
+        $this->info('You can now visit /admin (Admin Panel).');
 
         return static::SUCCESS;
     }

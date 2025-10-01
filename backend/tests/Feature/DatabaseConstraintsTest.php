@@ -22,7 +22,7 @@ class DatabaseConstraintsTest extends TestCase
             \DB::statement('PRAGMA foreign_keys = ON;');
         }
 
-        foreach (['system-admin', 'team', 'consultant', 'client'] as $r) {
+        foreach (['admin', 'team', 'consultant', 'client'] as $r) {
             \Spatie\Permission\Models\Role::findOrCreate($r, 'web');
         }
     }
@@ -123,10 +123,10 @@ class DatabaseConstraintsTest extends TestCase
         $wsB = Workspace::factory()->create(['name' => 'Workspace B']);
 
         $adminA = User::factory()->create(['current_workspace_id' => $wsA->id]);
-        $adminA->assignRole('system-admin');
+        $adminA->assignRole('admin');
 
         $adminB = User::factory()->create(['current_workspace_id' => $wsB->id]);
-        $adminB->assignRole('system-admin');
+        $adminB->assignRole('admin');
 
         $projectA = Project::factory()->create(['workspace_id' => $wsA->id]);
         $projectB = Project::factory()->create(['workspace_id' => $wsB->id]);

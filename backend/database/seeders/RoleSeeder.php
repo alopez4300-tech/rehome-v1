@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // Create standard roles for the application
-        $roles = ['system-admin', 'team', 'consultant', 'client'];
+        $roles = ['admin', 'team', 'consultant', 'client'];
 
         foreach ($roles as $roleName) {
             Role::firstOrCreate([

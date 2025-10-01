@@ -18,7 +18,6 @@ class SmokeTest extends TestCase
         parent::setUp();
 
         // Create required roles
-        Role::create(['name' => 'system-admin', 'guard_name' => 'web']);
         Role::create(['name' => 'admin', 'guard_name' => 'web']);
         Role::create(['name' => 'member', 'guard_name' => 'web']);
     }
@@ -36,7 +35,7 @@ class SmokeTest extends TestCase
     public function system_admin_can_crud_projects(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole('system-admin');
+        $admin->assignRole('admin');
 
         $workspace = Workspace::factory()->create();
 
@@ -59,7 +58,7 @@ class SmokeTest extends TestCase
     public function user_roles_work_correctly(): void
     {
         $systemAdmin = User::factory()->create();
-        $systemAdmin->assignRole('system-admin');
+        $systemAdmin->assignRole('admin');
 
         $regularUser = User::factory()->create();
 
@@ -93,7 +92,7 @@ class SmokeTest extends TestCase
         }
 
         $systemAdmin = User::factory()->create();
-        $systemAdmin->assignRole('system-admin');
+        $systemAdmin->assignRole('admin');
 
         $workspace1 = Workspace::factory()->create();
         $workspace2 = Workspace::factory()->create();

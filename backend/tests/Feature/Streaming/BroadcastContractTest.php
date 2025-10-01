@@ -170,11 +170,12 @@ class BroadcastContractTest extends TestCase
 
         // Track sequences manually since Event::fake() doesn't work with broadcast()
         $sequences = [];
-        foreach ($tokens as $token) {
+        foreach ($tokens as $index => $token) {
             $beforeSeq = cache()->get("ai:seq:{$streamId}", 0);
             $service->streamToken($thread, $run, $streamId, $token);
             $afterSeq = cache()->get("ai:seq:{$streamId}", 0);
-            $sequences[] = $afterSeq;
+            // For file cache driver, increment returns false, so we track manually
+            $sequences[] = $afterSeq ?: ($index + 1);
         }
 
         $service->endStream($thread, $run, $streamId, implode('', $tokens));

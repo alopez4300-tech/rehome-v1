@@ -133,12 +133,11 @@ class User extends Authenticatable
     }
 
     /**
-     * System-wide admin (treat 'system-admin' and 'admin' as superusers).
+     * System-wide admin (treat 'admin' as superuser).
      */
     public function isSystemAdmin(): bool
     {
-        // If you've standardized to just 'admin', this still works.
-        return $this->hasRole('system-admin') || $this->hasRole('admin');
+        return $this->hasRole('admin');
     }
 
     /**

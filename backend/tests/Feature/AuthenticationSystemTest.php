@@ -18,7 +18,7 @@ class AuthenticationSystemTest extends TestCase
         parent::setUp();
 
         // Create roles for testing
-        foreach (['system-admin', 'team', 'consultant', 'client'] as $roleName) {
+        foreach (['admin', 'team', 'consultant', 'client'] as $roleName) {
             \Spatie\Permission\Models\Role::firstOrCreate([
                 'name' => $roleName,
                 'guard_name' => 'web',
@@ -31,7 +31,7 @@ class AuthenticationSystemTest extends TestCase
     {
         $workspace = Workspace::factory()->create();
         $systemAdmin = User::factory()->create(['current_workspace_id' => $workspace->id]);
-        $systemAdmin->assignRole('system-admin');
+        $systemAdmin->assignRole('admin');
 
         $this->assertTrue($systemAdmin->isSystemAdmin());
         $this->assertTrue($systemAdmin->isWorkspaceAdmin());
@@ -129,7 +129,7 @@ class AuthenticationSystemTest extends TestCase
 
         // System admin
         $systemAdmin = User::factory()->create(['current_workspace_id' => $workspace->id]);
-        $systemAdmin->assignRole('system-admin');
+        $systemAdmin->assignRole('admin');
 
         // Workspace admin
         $workspaceAdmin = User::factory()->create(['current_workspace_id' => $workspace->id]);

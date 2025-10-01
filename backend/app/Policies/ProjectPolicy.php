@@ -12,8 +12,8 @@ class ProjectPolicy
      */
     public function before(User $user, string $ability): ?bool
     {
-        // System admins can do everything
-        if ($user->hasRole('system-admin')) {
+        // Admins can do everything
+        if ($user->hasRole('admin')) {
             return true;
         }
 
@@ -27,7 +27,7 @@ class ProjectPolicy
     public function viewAny(User $user): bool
     {
         // Admin can view projects, or any user with project memberships
-        return $user->hasRole('system-admin') || $user->hasAnyRole(['team', 'consultant', 'client']);
+        return $user->hasRole('admin') || $user->hasAnyRole(['team', 'consultant', 'client']);
     }
 
     /**
@@ -36,7 +36,7 @@ class ProjectPolicy
     public function view(User $user, Project $project): bool
     {
         // Admin can view projects in their workspace, or user must be project member
-        if ($user->hasRole('system-admin')) {
+        if ($user->hasRole('admin')) {
             return $user->workspace_id === $project->workspace_id;
         }
 
@@ -49,7 +49,7 @@ class ProjectPolicy
     public function create(User $user): bool
     {
         // Only admin can create projects
-        return $user->hasRole('system-admin');
+        return $user->hasRole('admin');
     }
 
     /**
@@ -58,7 +58,7 @@ class ProjectPolicy
     public function update(User $user, Project $project): bool
     {
         // Admin can update projects in their workspace
-        if ($user->hasRole('system-admin')) {
+        if ($user->hasRole('admin')) {
             return $user->workspace_id === $project->workspace_id;
         }
 
@@ -74,7 +74,7 @@ class ProjectPolicy
     public function delete(User $user, Project $project): bool
     {
         // Only admin can delete projects in their workspace
-        return $user->hasRole('system-admin') && $user->workspace_id === $project->workspace_id;
+        return $user->hasRole('admin') && $user->workspace_id === $project->workspace_id;
     }
 
     /**
@@ -83,7 +83,7 @@ class ProjectPolicy
     public function restore(User $user, Project $project): bool
     {
         // Only admin can restore projects in their workspace
-        return $user->hasRole('system-admin') && $user->workspace_id === $project->workspace_id;
+        return $user->hasRole('admin') && $user->workspace_id === $project->workspace_id;
     }
 
     /**
@@ -92,6 +92,6 @@ class ProjectPolicy
     public function forceDelete(User $user, Project $project): bool
     {
         // Only admin can force delete projects in their workspace
-        return $user->hasRole('system-admin') && $user->workspace_id === $project->workspace_id;
+        return $user->hasRole('admin') && $user->workspace_id === $project->workspace_id;
     }
 }

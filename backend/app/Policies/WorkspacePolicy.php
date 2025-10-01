@@ -12,8 +12,8 @@ class WorkspacePolicy
      */
     public function before(User $user, string $ability): ?bool
     {
-        // System admins can do everything
-        if ($user->hasRole('system-admin')) {
+        // Admins can do everything
+        if ($user->hasRole('admin')) {
             return true;
         }
 
@@ -26,8 +26,8 @@ class WorkspacePolicy
      */
     public function viewAny(User $user): bool
     {
-        // Only system-admin role can view workspaces list
-        return $user->hasRole('system-admin');
+        // Only admin role can view workspaces list
+        return $user->hasRole('admin');
     }
 
     /**
@@ -36,7 +36,7 @@ class WorkspacePolicy
     public function view(User $user, Workspace $workspace): bool
     {
         // Admin can view their workspace, or if they have admin role
-        return $user->hasRole('system-admin') && $user->workspace_id === $workspace->id;
+        return $user->hasRole('admin') && $user->workspace_id === $workspace->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class WorkspacePolicy
     public function create(User $user): bool
     {
         // Only admin role can create workspaces
-        return $user->hasRole('system-admin');
+        return $user->hasRole('admin');
     }
 
     /**
@@ -54,7 +54,7 @@ class WorkspacePolicy
     public function update(User $user, Workspace $workspace): bool
     {
         // Admin can update their workspace
-        return $user->hasRole('system-admin') && $user->workspace_id === $workspace->id;
+        return $user->hasRole('admin') && $user->workspace_id === $workspace->id;
     }
 
     /**
@@ -63,7 +63,7 @@ class WorkspacePolicy
     public function delete(User $user, Workspace $workspace): bool
     {
         // Admin can delete workspace only if it has no projects
-        return $user->hasRole('system-admin') &&
+        return $user->hasRole('admin') &&
                $user->workspace_id === $workspace->id &&
                $workspace->projects()->count() === 0;
     }
@@ -74,7 +74,7 @@ class WorkspacePolicy
     public function restore(User $user, Workspace $workspace): bool
     {
         // Admin can restore workspace
-        return $user->hasRole('system-admin');
+        return $user->hasRole('admin');
     }
 
     /**
@@ -83,7 +83,7 @@ class WorkspacePolicy
     public function forceDelete(User $user, Workspace $workspace): bool
     {
         // Admin can force delete workspace only if it has no projects
-        return $user->hasRole('system-admin') &&
+        return $user->hasRole('admin') &&
                $user->workspace_id === $workspace->id &&
                $workspace->projects()->count() === 0;
     }

@@ -68,8 +68,8 @@ class VerifyPolicies extends Command
         ]);
 
         // Assign roles
-        $admin1->assignRole('system-admin');
-        $admin2->assignRole('system-admin');
+        $admin1->assignRole('admin');
+        $admin2->assignRole('admin');
         $teamMember->assignRole('team');
 
         // Create test project

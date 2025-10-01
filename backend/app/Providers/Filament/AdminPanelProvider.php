@@ -19,24 +19,24 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\View;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class OpsPanelProvider extends PanelProvider
+class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('ops')
-            ->path('ops')
+            ->default()
+            ->id('admin')
+            ->path('admin')
             ->login()
-            ->brandName('Workspace Admin')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Ops/Resources'), for: 'App\\Filament\\Ops\\Resources')
-            ->discoverPages(in: app_path('Filament/Ops/Pages'), for: 'App\\Filament\\Ops\\Pages')
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Ops/Widgets'), for: 'App\\Filament\\Ops\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -54,8 +54,10 @@ class OpsPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                'ops.admin',
+                'role:admin',
             ])
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->renderHook('panels::scripts.before', fn () => View::make('filament.hooks.echo-init'))
             ->renderHook('panels::topbar.end', fn () => View::make('filament.components.profile-badge'));
     }
 }

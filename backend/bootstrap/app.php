@@ -19,7 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'agent.rate_limit' => \App\Http\Middleware\AgentRateLimit::class,
-            'ops.admin' => \App\Http\Middleware\EnsureWorkspaceAdmin::class,
             'admin.workspace' => \App\Http\Middleware\EnsureAdminHasWorkspace::class,
         ]);
     })
