@@ -24,8 +24,7 @@ class ProjectResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->where('workspace_id', Auth::user()->workspace_id ?? 1);
+        return parent::getEloquentQuery();
     }
 
     public static function form(Form $form): Form

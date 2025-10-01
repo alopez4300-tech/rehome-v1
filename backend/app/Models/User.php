@@ -215,7 +215,7 @@ class User extends Authenticatable
         return $this->hasMany(AgentThread::class)
             ->where('audience', 'admin')
             ->whereHas('project', function ($query) {
-                $query->where('workspace_id', $this->workspace_id);
+                $query->where('workspace_id', $this->current_workspace_id);
             });
     }
 
@@ -230,6 +230,6 @@ class User extends Authenticatable
         }
 
         // Check if user's workspace matches
-        return $this->workspace_id === $workspaceId;
+        return $this->current_workspace_id === $workspaceId;
     }
 }

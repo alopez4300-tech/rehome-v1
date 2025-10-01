@@ -56,10 +56,8 @@ class AppFirstRun extends Command
             'description' => 'Primary workspace for '.$this->option('workspace'),
         ]);
 
-        // Set current workspace on user (if column exists)
-        if (\Illuminate\Support\Facades\Schema::hasColumn('users', 'current_workspace_id')) {
-            $user->forceFill(['current_workspace_id' => $workspace->id])->save();
-        }
+        // Set current workspace on user
+        $user->forceFill(['current_workspace_id' => $workspace->id])->save();
 
         // Ensure membership as owner
         \App\Models\WorkspaceMember::firstOrCreate([

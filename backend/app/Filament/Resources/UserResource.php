@@ -26,8 +26,7 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-            ->where('workspace_id', Auth::user()->workspace_id ?? 1);
+        return parent::getEloquentQuery();
     }
 
     public static function form(Form $form): Form
@@ -56,12 +55,10 @@ class UserResource extends Resource
 
                 Forms\Components\Section::make('Workspace & Role')
                     ->schema([
-                        Forms\Components\Select::make('workspace_id')
+                        Forms\Components\Select::make('current_workspace_id')
                             ->relationship('workspace', 'name')
-                            ->required()
                             ->searchable()
-                            ->preload()
-                            ->default(Auth::user()->workspace_id ?? 1),
+                            ->preload(),
                         Forms\Components\Select::make('roles')
                             ->relationship('roles', 'name')
                             ->multiple()

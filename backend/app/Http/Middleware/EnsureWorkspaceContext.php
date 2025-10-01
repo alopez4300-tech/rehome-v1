@@ -26,10 +26,10 @@ class EnsureWorkspaceContext
             $user = Auth::user();
 
             // Ensure user has workspace
-            if (! $user->workspace_id) {
+            if (! $user->current_workspace_id) {
                 // If no workspace, could redirect to workspace selection
                 // For now, we'll use a default workspace (created in seeder)
-                $user->workspace_id = 1;
+                $user->current_workspace_id = 1;
                 $user->save();
             }
 

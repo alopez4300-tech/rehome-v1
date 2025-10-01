@@ -12,9 +12,9 @@ class LoginResponse implements LoginResponseContract
         $u = $request->user();
 
         if (method_exists($u, 'hasRole') && $u->hasRole('admin')) {
-            return redirect()->intended('/admin');
+            return new RedirectResponse('/admin');
         }
 
-        return redirect()->intended('/app');
+        return new RedirectResponse('/app');
     }
 }

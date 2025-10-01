@@ -24,7 +24,7 @@ class EnsureAdminHasWorkspace
         }
 
         // If user has admin role but no workspace assigned
-        if ($user->hasRole('admin') && ! $user->workspace_id) {
+        if ($user->hasRole('admin') && ! $user->current_workspace_id) {
             // For API requests, return JSON error
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
