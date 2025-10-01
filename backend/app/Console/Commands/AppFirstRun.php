@@ -13,7 +13,7 @@ class AppFirstRun extends Command
      */
     protected $signature = 'app:first-run
         {--email=admin@example.com}
-        {--name=System Admin}
+        {--name=Admin}
         {--password=secret}
         {--workspace=Acme HQ}';
 
@@ -22,7 +22,7 @@ class AppFirstRun extends Command
      *
      * @var string
      */
-    protected $description = 'Bootstrap first system admin, workspace, and membership';
+    protected $description = 'Bootstrap first admin, workspace, and membership';
 
     /**
      * Execute the console command.

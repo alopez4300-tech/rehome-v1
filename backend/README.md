@@ -9,14 +9,13 @@
 
 # Rehome v1 Backend
 
-A multi-tenant project management platform built with Laravel 11, featuring a 3-surface architecture and flexible operational profiles.
+A multi-tenant project management platform built with Laravel 11, featuring a 2-surface architecture and flexible operational profiles.
 
 ## 🏗️ Architecture Overview
 
-### 3-Surface Architecture
+### 2-Surface Architecture
 
-- **System Admin** (`/admin`) - Global system administration (Filament)
-- **Workspace Admin** (`/ops`) - Workspace-scoped operations (Filament)
+- **Admin Panel** (`/admin`) - System administration (Filament)
 - **App SPA** (`/app`) - Project-focused user interface (React/Vue)
 
 ### Authentication System

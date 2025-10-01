@@ -11,12 +11,8 @@ class LoginResponse implements LoginResponseContract
     {
         $u = $request->user();
 
-        if (method_exists($u, 'isSystemAdmin') && $u->isSystemAdmin()) {
+        if (method_exists($u, 'hasRole') && $u->hasRole('admin')) {
             return redirect()->intended('/admin');
-        }
-
-        if (method_exists($u, 'isWorkspaceAdmin') && $u->isWorkspaceAdmin()) {
-            return redirect()->intended('/ops');
         }
 
         return redirect()->intended('/app');

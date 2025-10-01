@@ -152,16 +152,16 @@ class AuthenticationSystemTest extends TestCase
         // Test LoginResponse redirects
         $loginResponse = new \App\Filament\Responses\LoginResponse;
 
-        // System admin should go to /admin
+        // Admin should go to /admin
         $request = new \Illuminate\Http\Request;
         $request->setUserResolver(fn () => $systemAdmin);
         $response = $loginResponse->toResponse($request);
         $this->assertEquals(url('/admin'), $response->getTargetUrl());
 
-        // Workspace admin should go to /ops
+        // Non-admin should go to /app
         $request->setUserResolver(fn () => $workspaceAdmin);
         $response = $loginResponse->toResponse($request);
-        $this->assertEquals(url('/ops'), $response->getTargetUrl());
+        $this->assertEquals(url('/app'), $response->getTargetUrl());
 
         // Regular user should go to /app
         $request->setUserResolver(fn () => $regularUser);

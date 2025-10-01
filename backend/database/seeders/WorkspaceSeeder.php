@@ -33,14 +33,11 @@ class WorkspaceSeeder extends Seeder
         }
 
         // Create roles
-        $adminRole = Role::firstOrCreate(['name' => 'workspace-admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->syncPermissions($permissions);
 
-        $managerRole = Role::firstOrCreate(['name' => 'project-manager']);
-        $managerRole->syncPermissions(['manage projects', 'manage tasks', 'manage files', 'view reports']);
-
-        $memberRole = Role::firstOrCreate(['name' => 'team-member']);
-        $memberRole->syncPermissions(['manage tasks', 'manage files']);
+        $teamRole = Role::firstOrCreate(['name' => 'team']);
+        $teamRole->syncPermissions(['manage projects', 'manage tasks', 'manage files', 'view reports']);
 
         $consultantRole = Role::firstOrCreate(['name' => 'consultant']);
         $consultantRole->syncPermissions(['view reports', 'manage files']);
@@ -75,7 +72,7 @@ class WorkspaceSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $admin->assignRole('workspace-admin');
+        $admin->assignRole('admin');
 
         // Create team member
         $teamMember = User::firstOrCreate(
@@ -89,7 +86,7 @@ class WorkspaceSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-        $teamMember->assignRole('team-member');
+        $teamMember->assignRole('team');
 
         // Create consultant
         $consultant = User::firstOrCreate(

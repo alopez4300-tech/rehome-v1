@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Panels\Panel;
 
 class User extends Authenticatable
 {
@@ -136,6 +137,14 @@ class User extends Authenticatable
      * System-wide admin (treat 'admin' as superuser).
      */
     public function isSystemAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * Gate access to Filament panels
+     */
+    public function canAccessPanel(Panel $panel): bool
     {
         return $this->hasRole('admin');
     }
